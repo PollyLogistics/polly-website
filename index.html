@@ -244,6 +244,15 @@ footer{background:var(--ink);border-top:1px solid var(--border);padding:52px 48p
 @keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 @keyframes scrollPulse{0%,100%{opacity:.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.15)}}
+  
+/* ── LIGHT THEME ── */
+body.light{--ink:#F4F5F7;--ink2:#FFFFFF;--ink3:#EBEBEB;--ink4:#DDDDDD;--border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.15);--white:#1A1A1A;--muted:rgba(26,26,26,0.6);--faint:rgba(26,26,26,0.35)}
+body.light nav.scrolled{background:rgba(244,245,247,.95)}
+body.light .hero-grid{background-image:linear-gradient(rgba(0,0,0,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,0,0,.04) 1px,transparent 1px)}
+body.light #cur-dot{background:var(--amber)}
+body.light .hero-glow{background:radial-gradient(ellipse at 50% 80%,rgba(37,99,235,.12) 0%,transparent 65%)}
+#theme-toggle{position:fixed;bottom:24px;right:24px;z-index:200;background:var(--ink3);border:1px solid var(--border2);color:var(--white);font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;padding:8px 14px;border-radius:20px;cursor:pointer;transition:all .2s}
+#theme-toggle:hover{background:var(--ink4)}  
 
 /* ── RESPONSIVE ── */
 @media(max-width:900px){
@@ -694,7 +703,8 @@ footer{background:var(--ink);border-top:1px solid var(--border);padding:52px 48p
     <span class="footer-copy">pollylogistics.com</span>
   </div>
 </footer>
-
+  
+<button id="theme-toggle">☀ Light</button>
 <script>
 // ── CUSTOM CURSOR ────────────────────────────────────────────────────────
 const dot  = document.getElementById('cur-dot');
@@ -740,6 +750,13 @@ const ro=new IntersectionObserver(entries=>{
 },{threshold:0.1});
 document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
 
+// ── THEME TOGGLE ─────────────────────────────────────────────────────────
+const themeBtn = document.getElementById('theme-toggle');
+themeBtn.addEventListener('click', () => {
+  document.body.classList.toggle('light');
+  themeBtn.textContent = document.body.classList.contains('light') ? '☾ Dark' : '☀ Light';
+});
+  
 // ── SMOOTH SCROLL ─────────────────────────────────────────────────────────
 document.querySelectorAll('a[href^="#"]').forEach(a=>{
   a.addEventListener('click',e=>{
