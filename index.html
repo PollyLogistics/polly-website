@@ -67,7 +67,7 @@ nav.s{background:rgba(8,8,9,.9);backdrop-filter:blur(20px);border-color:var(--wi
 .gcard:hover{border-color:var(--wire2)}
 .gn{font-family:var(--mono);font-size:10px;color:var(--amber-hi);flex-shrink:0;margin-top:4px}
 .gtitle{font-family:var(--disp);font-size:14px;font-weight:700;color:var(--chalk);margin-bottom:4px}
-.gbody{font-size:12.5px;font-weight:300;color:var(--chalk3);line-height:1.65}
+.gbody{font-size:14px;font-weight:300;color:var(--chalk3);line-height:1.8}
 .mnums{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:36px}
 .mnum{background:var(--ink3);border:1px solid var(--wire);border-radius:6px;padding:20px}
 .mnv{font-family:var(--disp);font-size:34px;font-weight:800;color:var(--chalk);line-height:1}
@@ -81,8 +81,8 @@ nav.s{background:rgba(8,8,9,.9);backdrop-filter:blur(20px);border-color:var(--wi
 .aword{font-family:var(--disp);font-size:16px;font-weight:700;color:var(--chalk);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
 .adesc{font-size:12.5px;font-weight:300;color:var(--chalk3);line-height:1.5}
 .mquote{font-family:var(--disp);font-size:clamp(18px,2.2vw,26px);font-weight:600;color:var(--chalk);line-height:1.35;padding-left:20px;border-left:2px solid var(--amber-hi)}
-.vbody{font-size:14px;font-weight:300;color:var(--chalk2);line-height:1.8;margin-top:16px}
-#story{height:600vh;position:relative}
+.vbody{font-size:15px;font-weight:300;color:var(--chalk2);line-height:1.9;margin-top:20px}
+#story{height:550vh;position:relative}
 .ssticky{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--ink);display:flex;align-items:center}
 .sbgtext{position:absolute;left:-1%;bottom:-2%;font-family:var(--disp);font-size:clamp(110px,17vw,240px);font-weight:800;color:var(--chalk4);text-transform:uppercase;letter-spacing:-.04em;pointer-events:none;white-space:nowrap;will-change:transform}
 .strack{display:flex;will-change:transform;height:100%}
@@ -91,7 +91,7 @@ nav.s{background:rgba(8,8,9,.9);backdrop-filter:blur(20px);border-color:var(--wi
 .spnum{font-family:var(--disp);font-size:clamp(90px,13vw,160px);font-weight:800;color:var(--ink4);line-height:1;letter-spacing:-.04em;margin-bottom:-12px}
 .sptitle{font-family:var(--disp);font-size:clamp(30px,3.4vw,48px);font-weight:800;text-transform:uppercase;line-height:1;color:var(--chalk);margin-bottom:16px}
 .sptitle i{font-style:normal;color:var(--fuel-hi)}.sptitle s{text-decoration:none;color:var(--amber-hi)}
-.spbody{font-size:14.5px;font-weight:300;color:var(--chalk2);line-height:1.85;max-width:440px}
+.spbody{font-size:16px;font-weight:300;color:var(--chalk2);line-height:2;max-width:460px}
 .spprog{display:flex;gap:6px;margin-top:24px}
 .spdot{width:6px;height:6px;border-radius:50%;background:var(--ink4);transition:all .35s}
 .spdot.a{background:var(--amber-hi);width:20px;border-radius:3px}
@@ -141,7 +141,7 @@ nav.s{background:rgba(8,8,9,.9);backdrop-filter:blur(20px);border-color:var(--wi
 .fcnum{position:absolute;top:24px;right:24px;font-family:var(--mono);font-size:9.5px;color:var(--ink4)}
 .fcicon{font-size:22px;margin-bottom:16px;display:block}
 .fcname{font-family:var(--disp);font-size:17px;font-weight:700;text-transform:uppercase;color:var(--chalk);margin-bottom:8px;letter-spacing:.02em}
-.fcdesc{font-size:12.5px;font-weight:300;color:var(--chalk3);line-height:1.75}
+.fcdesc{font-size:14px;font-weight:300;color:var(--chalk3);line-height:1.85}
 #roadmap{padding:90px 48px;max-width:1200px;margin:0 auto}
 .rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--wire);margin-top:48px}
 .rp{background:var(--ink);padding:28px 24px;position:relative;transition:background .3s}
@@ -226,8 +226,6 @@ footer{background:var(--ink);border-top:1px solid var(--wire);padding:56px 48px 
   <a href="#" class="n-logo">POLL<b>Y</b></a>
   <ul class="n-links">
     <li><a href="#features">Platform</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#pricing">Pricing</a></li>
     <li><a href="#cta" class="n-cta">Request Demo</a></li>
   </ul>
 </nav>
@@ -354,17 +352,7 @@ footer{background:var(--ink);border-top:1px solid var(--wire);padding:56px 48px 
     <div class="fc rev" data-d="160"><span class="fcnum">06</span><span class="fcicon">💰</span><div class="fcname">Billing &amp; Invoicing</div><div class="fcdesc">Auto-generated invoices on delivery completion. Stripe payment links. Live AR dashboard. Per-customer pricing rules, volume tiers, and fuel surcharge calculators.</div></div>
   </div></div>
 </section>
-<section id="roadmap">
-  <div class="eyebrow rev">Implementation Roadmap</div>
-  <h2 class="st rev" data-d="80">Built in <i>phases.</i><br>Revenue from <s>day one.</s></h2>
-  <p class="rev" style="font-size:13.5px;font-weight:300;color:var(--chalk2);max-width:520px;margin-top:14px;line-height:1.8" data-d="120">Four deliberate phases. Each builds on the last. The business is cash-flow positive from the very first customer — with infrastructure costs beginning under $700/month.</p>
-  <div class="rgrid">
-    <div class="rp rev" data-d="0"><div class="rpst snow">Building Now</div><div class="rpn">Phase 1</div><div class="rpt">Foundation</div><div class="rptm">Months 1–9</div><div class="ritems"><div class="ritem">Samsara &amp; Motive API connectors</div><div class="ritem">Live fleet map &amp; GPS tracking</div><div class="ritem">Order management &amp; dispatch</div><div class="ritem">Exception alerting (email &amp; SMS)</div><div class="ritem">Inventory visibility dashboard</div><div class="ritem">Auth0 SSO authentication</div></div></div>
-    <div class="rp rev" data-d="80"><div class="rpst splan">Planned</div><div class="rpn">Phase 2</div><div class="rpt">Integration</div><div class="rptm">Months 6–12</div><div class="ritems"><div class="ritem">Embeddable Web Components</div><div class="ritem">OAuth 2.0 &amp; SAML SSO</div><div class="ritem">EDI translation via Stedi</div><div class="ritem">CSV/SFTP ingestion</div><div class="ritem">Beta customer onboarding</div></div></div>
-    <div class="rp rev" data-d="160"><div class="rpst splan">Planned</div><div class="rpn">Phase 3</div><div class="rpt">AI Layer</div><div class="rptm">Months 10–18</div><div class="ritems"><div class="ritem">Predictive ETA models</div><div class="ritem">Dwell time prediction</div><div class="ritem">Exception forecasting</div><div class="ritem">Demand forecasting</div><div class="ritem">ML-enhanced routing</div></div></div>
-    <div class="rp rev" data-d="240"><div class="rpst splan">Planned</div><div class="rpn">Phase 4</div><div class="rpt">Full Platform</div><div class="rptm">Months 15–24</div><div class="ritems"><div class="ritem">Full CRM module</div><div class="ritem">Contract creation &amp; POs</div><div class="ritem">Full AR/AP suite</div><div class="ritem">Competitor migration program</div><div class="ritem">Expansion planning</div></div></div>
-  </div>
-</section>
+
 <section id="moat">
   <div class="moatinn"><div class="eyebrow rev">Defensibility</div><h2 class="st rev" data-d="80">Six reasons<br>carriers <i>stay.</i></h2><p class="rev" style="font-size:13.5px;font-weight:300;color:var(--chalk2);max-width:500px;margin-top:14px;line-height:1.8" data-d="120">Defensibility isn't built on launch day — it's built through data accumulation, operational depth, and switching costs that compound over time.</p>
   <div class="mgrid">
@@ -376,20 +364,6 @@ footer{background:var(--ink);border-top:1px solid var(--wire);padding:56px 48px 
     <div class="mc rev" data-d="160"><div class="mcicon">🌐</div><div class="mctitle">Network Effects</div><div class="mcbody">Fuel distributors in the same region share terminals and customer types. Word of mouth in a tight-knit vertical moves faster than any ad campaign.</div></div>
   </div></div>
 </section>
-<section id="expansion">
-  <div class="eyebrow rev">The Bigger Picture</div>
-  <h2 class="st rev" data-d="80">Starting focused.<br><i>Thinking bigger.</i></h2>
-  <p class="rev" style="font-size:13.5px;font-weight:300;color:var(--chalk2);max-width:520px;margin-top:14px;line-height:1.8" data-d="100">POLLY enters through the fuel and lube vertical. But the operational intelligence we're building has no ceiling.</p>
-  <div class="evis rev" data-d="140">
-    <div class="ecirc"><div class="enum">Phase 1 · Now</div><div class="elabel">Fuel &amp; Lube</div><div class="edesc">~17,000 US operators. DEF, diesel, lubricants, propane. The vertical where POLLY is purpose-built to win.</div></div>
-    <div class="earr">→</div>
-    <div class="ecirc"><div class="enum">Phase 2 · Year 2+</div><div class="elabel">Trucking</div><div class="edesc">~60,000 US carriers with 5–100 trucks. Operational intelligence applied to general trucking and LTL.</div></div>
-    <div class="earr">→</div>
-    <div class="ecirc"><div class="enum">Phase 3 · Long-Term</div><div class="elabel">Warehousing</div><div class="edesc">The logistics chain extends to distribution centers. POLLY's inventory and routing intelligence translates naturally.</div></div>
-    <div class="earr">→</div>
-    <div class="ecirc"><div class="enum">Vision · Beyond</div><div class="elabel">Air &amp; Ocean</div><div class="edesc">Long-horizon expansion. The operational layer that connects every mode of transport.</div></div>
-  </div>
-</section>
 <section id="deploy">
   <div class="dinn"><div class="eyebrow rev">Deployment Options</div><h2 class="st rev" data-d="80">Works the way<br><i>you work.</i></h2>
   <div class="dgrid">
@@ -397,15 +371,7 @@ footer{background:var(--ink);border-top:1px solid var(--wire);padding:56px 48px 
     <div class="dcard dhot rev" data-d="100"><span class="dbadge db2">★ Key Differentiator</span><div class="dtitle">Embedded Integration</div><div class="dbody">For carriers with legacy systems they can't move away from. POLLY appears as a native tab inside their existing software. One iframe snippet. Zero workflow disruption. No competitor offers this.</div><div class="dlist"><div class="ditem">Single iframe — one conversation with IT</div><div class="ditem">Loads inside any web-based platform via SSO</div><div class="ditem">JavaScript bridge reads parent system context</div><div class="ditem">Per-module pricing — deploy only what you need</div><div class="ditem">No data migration required to get started</div></div></div>
   </div></div>
 </section>
-<section id="pricing">
-  <div class="prhead"><div class="eyebrow rev" style="justify-content:center">Pricing</div><h2 class="st rev" data-d="80" style="margin-bottom:10px">Simple, <i>scalable</i> pricing.</h2><p class="rev" style="font-size:13.5px;font-weight:300;color:var(--chalk2);max-width:420px;margin:0 auto;line-height:1.8" data-d="100">Asset-based pricing that scales with your fleet. All modules included. No per-seat fees, no hidden charges.</p></div>
-  <div class="prgrid">
-    <div class="prc rev" data-d="0"><div class="prctier">Starter</div><div class="prcprice"><sup>$</sup>700<sup style="font-size:14px">/mo</sup></div><div class="prccad">minimum · up to ~8 assets · then $91–93/asset/mo</div><div class="prcdiv"></div><ul class="prcfl"><li class="prcf">Full dispatch &amp; order management</li><li class="prcf">Multi-constraint route optimization</li><li class="prcf">Live GPS fleet tracking</li><li class="prcf">Customer &amp; contract management</li><li class="prcf">Invoicing &amp; billing</li><li class="prcf">Exception alerting (email + SMS)</li></ul><a href="#cta" class="btn bg" style="display:block;text-align:center">Get Started</a></div>
-    <div class="prc hot rev" data-d="120"><div class="prcbadge">Most Common</div><div class="prctier">Core / Professional</div><div class="prcprice"><sup>$</sup>88<sup style="font-size:14px">/asset</sup></div><div class="prccad">16–60 assets · $1,456–$4,800/mo total</div><div class="prcdiv"></div><ul class="prcfl"><li class="prcf">Everything in Starter</li><li class="prcf">Live tank inventory monitoring</li><li class="prcf">Managed sensor service (hardware incl.)</li><li class="prcf">Fleet health &amp; predictive maintenance</li><li class="prcf">Advanced analytics &amp; reports</li><li class="prcf">Pricing &amp; quoting engine</li><li class="prcf">Customer portal</li></ul><a href="#cta" class="btn bp" style="display:block;text-align:center">Request Demo</a></div>
-    <div class="prc rev" data-d="240"><div class="prctier">Enterprise</div><div class="prcprice" style="font-size:34px;padding:6px 0">Custom</div><div class="prccad">61–100+ assets · from $4,880/mo</div><div class="prcdiv"></div><ul class="prcfl"><li class="prcf">Everything in Core</li><li class="prcf">Multi-carrier tenant management</li><li class="prcf">AI/ML module (data-gated unlock)</li><li class="prcf">Custom integrations &amp; REST API</li><li class="prcf">Embedded deployment option</li><li class="prcf">SLA-backed uptime guarantees</li></ul><a href="#cta" class="btn bg" style="display:block;text-align:center">Contact Sales</a></div>
-  </div>
-  <p class="rev" style="font-size:11px;font-weight:300;color:var(--chalk3);margin-top:20px;text-align:center;font-family:var(--mono)" data-d="60">Embedded modules from $16–42/asset/mo · $350 min · Onboarding from $2,000 · Beta partners receive software &amp; hardware at no cost</p>
-</section>
+
 <section id="cta">
   <div class="cglow"></div>
   <h2 class="ch rev">Ready to run a<br>tighter <i>operation?</i></h2>
@@ -449,7 +415,7 @@ const bgW=['DISPATCH','OPTIMIZE','INVENTORY','INTEGRATE','INTELLIGENT'];
 addEventListener('scroll',()=>{
   const rect=story.getBoundingClientRect(),scrolled=-rect.top,total=story.offsetHeight-innerHeight;
   const p=Math.max(0,Math.min(1,scrolled/total));
-  strack.style.transform=`translateX(${-p*4*innerWidth}px)`;
+  strack.style.transform=`translateX(${-p*(N-1)*innerWidth}px)`;
   const idx=Math.min(Math.floor(p*5),4);
   sbgtext.textContent=bgW[idx];
   sbgtext.style.transform=`translateX(${p*-6}%)`;
