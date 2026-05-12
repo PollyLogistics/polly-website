@@ -752,6 +752,8 @@ document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
 
 // ── THEME TOGGLE ─────────────────────────────────────────────────────────
 const themeBtn = document.getElementById('theme-toggle');
+document.body.classList.add('light');
+themeBtn.textContent = '☾ Dark';
 themeBtn.addEventListener('click', () => {
   document.body.classList.toggle('light');
   themeBtn.textContent = document.body.classList.contains('light') ? '☾ Dark' : '☀ Light';
