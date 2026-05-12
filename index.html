@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>POLLY — Precision. Optimization. Logistics. Live Data. Your Fleet.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#080809;--ink2:#0E0E11;--ink3:#161619;--ink4:#1F1F24;
+  --wire:rgba(255,255,255,0.06);--wire2:rgba(255,255,255,0.10);
+  --fuel:#2B6CB0;--fuel-hi:#5BA3F5;--fuel-lo:rgba(43,108,176,0.12);
+  --amber:#D97706;--amber-hi:#FBB63C;--amber-lo:rgba(217,119,6,0.10);
+  --signal:#059669;--signal-hi:#34D399;
+  --chalk:#EDECE8;--chalk2:rgba(237,236,232,0.55);--chalk3:rgba(237,236,232,0.25);--chalk4:rgba(237,236,232,0.07);
+  --mono:'JetBrains Mono',monospace;--disp:'Syne',sans-serif;--body:'DM Sans',sans-serif;
+}
+html{overflow-x:hidden}
+body{background:var(--ink);color:var(--chalk);font-family:var(--body);font-size:16px;line-height:1.6;overflow-x:hidden;cursor:none}
+#c{position:fixed;width:7px;height:7px;background:var(--amber-hi);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);will-change:left,top;transition:width .2s,height .2s}
+#cr{position:fixed;width:28px;height:28px;border:1px solid rgba(251,182,60,.35);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);will-change:left,top;transition:width .25s,height .25s,border-color .25s}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;transition:background .4s,border-color .4s;border-bottom:1px solid transparent}
+nav.s{background:rgba(8,8,9,.9);backdrop-filter:blur(20px);border-color:var(--wire)}
+.n-logo{font-family:var(--disp);font-size:18px;font-weight:800;letter-spacing:.35em;color:var(--chalk);text-decoration:none}
+.n-logo b{color:var(--amber-hi)}
+.n-links{display:flex;gap:32px;list-style:none;align-items:center}
+.n-links a{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--chalk3);text-decoration:none;transition:color .2s}
+.n-links a:hover{color:var(--chalk)}
+.n-cta{background:var(--fuel)!important;color:var(--chalk)!important;padding:8px 18px;border-radius:3px}
+.n-cta:hover{background:var(--fuel-hi)!important;color:var(--chalk)!important}
+#hero{height:100vh;min-height:640px;position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 24px}
+.hbg{position:absolute;inset:0;background:var(--ink)}
+.hglow{position:absolute;bottom:-8%;left:50%;transform:translateX(-50%);width:900px;height:480px;background:radial-gradient(ellipse at 50% 80%,rgba(43,108,176,.2) 0%,transparent 65%);pointer-events:none}
+.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);background-size:56px 56px;transform:perspective(900px) rotateX(22deg) scale(1.4);transform-origin:50% 100%;will-change:transform}
+.heyebrow{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--amber-hi);text-transform:uppercase;position:relative;z-index:2;display:flex;align-items:center;gap:10px;justify-content:center;opacity:0;transform:translateY(16px);animation:fup .7s .3s forwards}
+.heyebrow::before,.heyebrow::after{content:'';display:block;width:24px;height:1px;background:var(--amber-hi)}
+.hh1{font-family:var(--disp);font-size:clamp(56px,8.5vw,122px);font-weight:800;line-height:.9;letter-spacing:-.025em;text-transform:uppercase;position:relative;z-index:2;opacity:0;transform:translateY(24px);animation:fup .8s .5s forwards;margin:18px 0}
+.hh1 i{display:block;font-style:normal;color:var(--fuel-hi)}
+.hh1 s{text-decoration:none;color:var(--amber-hi)}
+.hsub{font-size:clamp(14px,1.6vw,17px);font-weight:300;color:var(--chalk2);max-width:480px;line-height:1.75;position:relative;z-index:2;opacity:0;transform:translateY(18px);animation:fup .8s .72s forwards}
+.hacns{display:flex;gap:14px;margin-top:36px;position:relative;z-index:2;opacity:0;transform:translateY(16px);animation:fup .8s .92s forwards;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;border-radius:3px;font-size:13px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;transition:all .2s;border:none;cursor:pointer;font-family:var(--body)}
+.bp{background:var(--fuel);color:var(--chalk)}.bp:hover{background:var(--fuel-hi);transform:translateY(-2px)}
+.bg{border:1px solid var(--wire2);color:var(--chalk3)}.bg:hover{border-color:rgba(255,255,255,.22);color:var(--chalk);transform:translateY(-2px)}
+.hscroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;z-index:2;opacity:0;animation:fup 1s 1.3s forwards}
+.hscroll span{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--chalk3);text-transform:uppercase}
+.hline{width:1px;height:44px;background:linear-gradient(var(--amber-hi),transparent);animation:scpulse 2.2s ease-in-out infinite}
+.mq{background:var(--ink3);border-top:1px solid var(--wire);border-bottom:1px solid var(--wire);height:40px;overflow:hidden;display:flex;align-items:center}
+.mqt{display:flex;animation:mqanim 28s linear infinite;white-space:nowrap}
+.mqi{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--chalk3);padding:0 32px;display:flex;align-items:center;gap:10px;text-transform:uppercase}
+.mqd{width:3px;height:3px;background:var(--amber-hi);border-radius:50%;flex-shrink:0}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;color:var(--amber-hi);text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.eyebrow::before{content:'';display:block;width:20px;height:1px;background:var(--amber-hi)}
+.st{font-family:var(--disp);font-size:clamp(36px,4.8vw,66px);font-weight:800;line-height:.96;text-transform:uppercase;letter-spacing:-.02em;color:var(--chalk)}
+.st i{font-style:normal;color:var(--fuel-hi)}.st s{text-decoration:none;color:var(--amber-hi)}
+.rev{opacity:0;transform:translateY(24px);transition:opacity .75s ease,transform .75s ease}
+.rev.v{opacity:1;transform:translateY(0)}
+#intro{padding:110px 48px;max-width:1100px;margin:0 auto}
+.ibody{font-family:var(--disp);font-size:clamp(24px,3vw,40px);font-weight:600;line-height:1.25;color:var(--chalk2);max-width:860px}
+.ibody b{color:var(--chalk);font-weight:700}.ibody span{color:var(--fuel-hi)}
+#problem{background:var(--ink2);border-top:1px solid var(--wire);border-bottom:1px solid var(--wire);padding:100px 48px}
+.pgrid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.gcards{display:flex;flex-direction:column;gap:10px;margin-top:36px}
+.gcard{background:var(--ink3);border:1px solid var(--wire);border-radius:6px;padding:18px 22px;display:flex;gap:16px;align-items:flex-start;transition:border-color .3s}
+.gcard:hover{border-color:var(--wire2)}
+.gn{font-family:var(--mono);font-size:10px;color:var(--amber-hi);flex-shrink:0;margin-top:4px}
+.gtitle{font-family:var(--disp);font-size:14px;font-weight:700;color:var(--chalk);margin-bottom:4px}
+.gbody{font-size:12.5px;font-weight:300;color:var(--chalk3);line-height:1.65}
+.mnums{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:36px}
+.mnum{background:var(--ink3);border:1px solid var(--wire);border-radius:6px;padding:20px}
+.mnv{font-family:var(--disp);font-size:34px;font-weight:800;color:var(--chalk);line-height:1}
+.mnv span{color:var(--fuel-hi)}.mnl{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;color:var(--chalk3);text-transform:uppercase;margin-top:6px}
+#who{padding:110px 48px;max-width:1200px;margin:0 auto}
+.wgrid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.astack{margin-top:32px}
+.arow{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--wire);align-items:flex-start}
+.arow:first-child{border-top:1px solid var(--wire)}
+.aletter{font-family:var(--disp);font-size:38px;font-weight:800;color:var(--fuel-hi);line-height:1;width:44px;flex-shrink:0}
+.aword{font-family:var(--disp);font-size:16px;font-weight:700;color:var(--chalk);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.adesc{font-size:12.5px;font-weight:300;color:var(--chalk3);line-height:1.5}
+.mquote{font-family:var(--disp);font-size:clamp(18px,2.2vw,26px);font-weight:600;color:var(--chalk);line-height:1.35;padding-left:20px;border-left:2px solid var(--amber-hi)}
+.vbody{font-size:14px;font-weight:300;color:var(--chalk2);line-height:1.8;margin-top:16px}
+#story{height:600vh;position:relative}
+.ssticky{position:sticky;top:0;height:100vh;overflow:hidden;background:var(--ink);display:flex;align-items:center}
+.sbgtext{position:absolute;left:-1%;bottom:-2%;font-family:var(--disp);font-size:clamp(110px,17vw,240px);font-weight:800;color:var(--chalk4);text-transform:uppercase;letter-spacing:-.04em;pointer-events:none;white-space:nowrap;will-change:transform}
+.strack{display:flex;will-change:transform;height:100%}
+.spanel{min-width:100vw;height:100%;display:flex;align-items:center;padding:80px 10vw;flex-shrink:0}
+.spinn{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+.spnum{font-family:var(--disp);font-size:clamp(90px,13vw,160px);font-weight:800;color:var(--ink4);line-height:1;letter-spacing:-.04em;margin-bottom:-12px}
+.sptitle{font-family:var(--disp);font-size:clamp(30px,3.4vw,48px);font-weight:800;text-transform:uppercase;line-height:1;color:var(--chalk);margin-bottom:16px}
+.sptitle i{font-style:normal;color:var(--fuel-hi)}.sptitle s{text-decoration:none;color:var(--amber-hi)}
+.spbody{font-size:14.5px;font-weight:300;color:var(--chalk2);line-height:1.85;max-width:440px}
+.spprog{display:flex;gap:6px;margin-top:24px}
+.spdot{width:6px;height:6px;border-radius:50%;background:var(--ink4);transition:all .35s}
+.spdot.a{background:var(--amber-hi);width:20px;border-radius:3px}
+.svc{background:var(--ink3);border:1px solid var(--wire);border-radius:8px;padding:22px;width:100%;max-width:400px;font-family:var(--mono)}
+.svh{font-family:var(--disp);font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--chalk3);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--wire);display:flex;align-items:center;justify-content:space-between}
+.svlive{display:flex;align-items:center;gap:5px;font-size:9.5px;color:var(--signal-hi)}
+.svld{width:5px;height:5px;background:var(--signal-hi);border-radius:50%;animation:pulse 2s infinite}
+.svrow{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:10.5px;color:var(--chalk3)}
+.svrow:last-child{border:none}
+.svv{color:var(--chalk);font-weight:500}
+.svv.g{color:var(--signal-hi)}.svv.a{color:var(--amber-hi)}.svv.b{color:var(--fuel-hi)}
+.pill{display:inline-block;padding:2px 7px;border-radius:3px;font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+.pg{background:rgba(5,150,105,.2);color:var(--signal-hi)}.pa{background:rgba(217,119,6,.18);color:var(--amber-hi)}.pb{background:rgba(43,108,176,.22);color:var(--fuel-hi)}.pr{background:rgba(220,38,38,.18);color:#FC8181}
+#platform{padding:0 0 90px;max-width:1280px;margin:0 auto}
+.phead{text-align:center;padding:100px 48px 56px}
+.aframe{margin:0 48px;background:var(--ink2);border:1px solid var(--wire);border-radius:10px;overflow:hidden}
+.abar{height:32px;background:var(--ink3);border-bottom:1px solid var(--wire);display:flex;align-items:center;padding:0 14px;gap:7px}
+.adot{width:9px;height:9px;border-radius:50%}
+.aurl{flex:1;text-align:center;font-family:var(--mono);font-size:10px;color:var(--chalk3)}
+.alayout{display:grid;grid-template-columns:195px 1fr;height:420px}
+.aside{background:var(--ink3);border-right:1px solid var(--wire);padding:14px 0;display:flex;flex-direction:column}
+.alogoa{padding:10px 14px 14px;border-bottom:1px solid var(--wire);margin-bottom:6px}
+.alogotext{font-family:var(--disp);font-size:14px;font-weight:800;letter-spacing:.3em;color:var(--chalk)}
+.atenant{font-family:var(--mono);font-size:8px;color:var(--chalk3);letter-spacing:.08em;margin-top:2px}
+.anav{padding:9px 14px;font-family:var(--mono);font-size:10px;color:var(--chalk3);display:flex;align-items:center;gap:8px;border-left:2px solid transparent;transition:all .2s;cursor:pointer}
+.anav:hover{color:var(--chalk);background:var(--ink4)}
+.anav.on{color:var(--fuel-hi);border-left-color:var(--fuel);background:rgba(43,108,176,.08)}
+.amain{padding:22px;overflow:hidden;display:flex;flex-direction:column;gap:16px}
+.apgt{font-family:var(--disp);font-size:17px;font-weight:700;color:var(--chalk)}
+.apsub{font-family:var(--mono);font-size:9px;color:var(--chalk3)}
+.akpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.akpi{background:var(--ink3);border:1px solid var(--wire);border-radius:4px;padding:12px}
+.akpiv{font-family:var(--disp);font-size:22px;font-weight:800;line-height:1}
+.akpil{font-family:var(--mono);font-size:8px;color:var(--chalk3);margin-top:4px;letter-spacing:.08em;text-transform:uppercase}
+.ath{display:grid;grid-template-columns:2.2fr 1fr 1fr 1.1fr;gap:6px;padding:6px 10px;font-family:var(--mono);font-size:8px;color:var(--chalk3);text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--wire)}
+.atr{display:grid;grid-template-columns:2.2fr 1fr 1fr 1.1fr;gap:6px;padding:8px 10px;font-size:11.5px;color:var(--chalk2);border-bottom:1px solid rgba(255,255,255,.03);align-items:center;transition:background .15s;cursor:default}
+.atr:hover{background:var(--ink4)}
+#features{background:var(--ink2);border-top:1px solid var(--wire);padding:90px 48px}
+.finn{max-width:1200px;margin:0 auto}
+.fhead{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:52px}
+.fintro{font-size:14px;font-weight:300;color:var(--chalk2);line-height:1.85;max-width:420px}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--wire)}
+.fc{background:var(--ink2);padding:32px 28px;position:relative;overflow:hidden;transition:background .3s}
+.fc:hover{background:var(--ink3)}
+.fc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,var(--fuel),transparent);transform:scaleX(0);transform-origin:left;transition:transform .45s ease}
+.fc:hover::after{transform:scaleX(1)}
+.fcnum{position:absolute;top:24px;right:24px;font-family:var(--mono);font-size:9.5px;color:var(--ink4)}
+.fcicon{font-size:22px;margin-bottom:16px;display:block}
+.fcname{font-family:var(--disp);font-size:17px;font-weight:700;text-transform:uppercase;color:var(--chalk);margin-bottom:8px;letter-spacing:.02em}
+.fcdesc{font-size:12.5px;font-weight:300;color:var(--chalk3);line-height:1.75}
+#roadmap{padding:90px 48px;max-width:1200px;margin:0 auto}
+.rgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--wire);margin-top:48px}
+.rp{background:var(--ink);padding:28px 24px;position:relative;transition:background .3s}
+.rp:hover{background:var(--ink2)}
+.rpn{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--amber-hi);text-transform:uppercase;margin-bottom:10px}
+.rpt{font-family:var(--disp);font-size:16px;font-weight:700;text-transform:uppercase;color:var(--chalk);margin-bottom:4px}
+.rptm{font-family:var(--mono);font-size:8.5px;color:var(--chalk3);margin-bottom:14px}
+.ritems{display:flex;flex-direction:column;gap:7px}
+.ritem{font-size:12px;font-weight:300;color:var(--chalk3);display:flex;align-items:flex-start;gap:7px;line-height:1.5}
+.ritem::before{content:'–';color:var(--fuel-hi);flex-shrink:0;margin-top:1px}
+.rpst{position:absolute;top:24px;right:20px;font-family:var(--mono);font-size:8.5px;padding:2px 7px;border-radius:3px}
+.snow{background:rgba(5,150,105,.18);color:var(--signal-hi)}.splan{background:rgba(43,108,176,.15);color:var(--fuel-hi)}
+#moat{background:var(--ink2);border-top:1px solid var(--wire);border-bottom:1px solid var(--wire);padding:90px 48px}
+.moatinn{max-width:1200px;margin:0 auto}
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--wire);margin-top:48px}
+.mc{background:var(--ink2);padding:28px 26px;transition:background .3s}
+.mc:hover{background:var(--ink3)}
+.mcicon{width:34px;height:34px;background:var(--fuel-lo);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:16px}
+.mctitle{font-family:var(--disp);font-size:15px;font-weight:700;text-transform:uppercase;color:var(--chalk);margin-bottom:7px}
+.mcbody{font-size:12.5px;font-weight:300;color:var(--chalk3);line-height:1.7}
+#expansion{padding:90px 48px;max-width:1200px;margin:0 auto}
+.evis{display:flex;gap:2px;margin-top:48px;background:var(--wire)}
+.ecirc{flex:1;background:var(--ink2);padding:36px 24px;text-align:center;position:relative;overflow:hidden;transition:background .3s}
+.ecirc:hover{background:var(--ink3)}
+.enum{font-family:var(--mono);font-size:10px;color:var(--fuel-hi);margin-bottom:8px;letter-spacing:.08em}
+.elabel{font-family:var(--disp);font-size:17px;font-weight:700;text-transform:uppercase;color:var(--chalk);margin-bottom:7px}
+.edesc{font-size:12px;font-weight:300;color:var(--chalk3);line-height:1.65}
+.earr{display:flex;align-items:center;justify-content:center;width:28px;flex-shrink:0;background:var(--ink3);color:var(--chalk3);font-size:13px}
+#deploy{padding:90px 48px;background:var(--ink2);border-top:1px solid var(--wire)}
+.dinn{max-width:1200px;margin:0 auto}
+.dgrid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px}
+.dcard{background:var(--ink);border:1px solid var(--wire);border-radius:8px;padding:32px;transition:border-color .3s}
+.dcard:hover{border-color:var(--wire2)}
+.dcard.dhot{border-color:var(--fuel);background:rgba(43,108,176,.04)}
+.dbadge{display:inline-block;font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:2px;margin-bottom:14px}
+.db1{background:var(--fuel-lo);color:var(--fuel-hi)}.db2{background:var(--amber-lo);color:var(--amber-hi)}
+.dtitle{font-family:var(--disp);font-size:20px;font-weight:700;text-transform:uppercase;color:var(--chalk);margin-bottom:9px}
+.dbody{font-size:13.5px;font-weight:300;color:var(--chalk2);line-height:1.8;margin-bottom:20px}
+.dlist{display:flex;flex-direction:column;gap:8px}
+.ditem{font-size:12.5px;font-weight:300;color:var(--chalk3);display:flex;gap:9px;align-items:flex-start;line-height:1.5}
+.ditem::before{content:'→';color:var(--fuel-hi);flex-shrink:0;margin-top:2px}
+#pricing{padding:90px 48px;max-width:1200px;margin:0 auto}
+.prhead{text-align:center;margin-bottom:48px}
+.prgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--wire)}
+.prc{background:var(--ink);padding:36px 32px;position:relative}
+.prc.hot{background:var(--ink2);border-top:2px solid var(--fuel)}
+.prcbadge{position:absolute;top:0;right:24px;transform:translateY(-50%);background:var(--fuel);color:var(--chalk);font-family:var(--mono);font-size:8.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:0 0 4px 4px}
+.prctier{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--chalk3);text-transform:uppercase;margin-bottom:12px}
+.prcprice{font-family:var(--disp);font-size:48px;font-weight:800;color:var(--chalk);line-height:1}
+.prcprice sup{font-size:20px;color:var(--chalk3);vertical-align:super}
+.prccad{font-family:var(--mono);font-size:9px;color:var(--chalk3);margin-top:4px;margin-bottom:24px}
+.prcdiv{height:1px;background:var(--wire);margin-bottom:22px}
+.prcfl{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:28px}
+.prcf{font-size:12.5px;font-weight:300;color:var(--chalk3);display:flex;align-items:flex-start;gap:8px;line-height:1.5}
+.prcf::before{content:'–';color:var(--fuel-hi);flex-shrink:0}
+#cta{background:var(--ink2);border-top:1px solid var(--wire);padding:120px 48px;text-align:center;position:relative;overflow:hidden}
+.cglow{position:absolute;bottom:-200px;left:50%;transform:translateX(-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(43,108,176,.18) 0%,transparent 65%);pointer-events:none}
+.ch{font-family:var(--disp);font-size:clamp(42px,5.5vw,80px);font-weight:800;text-transform:uppercase;line-height:.95;letter-spacing:-.02em;color:var(--chalk);margin-bottom:20px;position:relative;z-index:1}
+.ch i{font-style:normal;color:var(--fuel-hi)}
+.csub{font-size:15px;font-weight:300;color:var(--chalk2);max-width:440px;margin:0 auto 36px;line-height:1.75;position:relative;z-index:1}
+.cacts{display:flex;justify-content:center;gap:14px;position:relative;z-index:1}
+footer{background:var(--ink);border-top:1px solid var(--wire);padding:56px 48px 32px}
+.ftinn{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:52px;margin-bottom:40px}
+.ftbrand{font-family:var(--disp);font-size:22px;font-weight:800;letter-spacing:.3em;color:var(--chalk);margin-bottom:10px}
+.ftbrand b{color:var(--amber-hi)}
+.fttag{font-size:13px;font-weight:300;color:var(--chalk3);line-height:1.75;max-width:260px}
+.ftch{font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;color:var(--amber-hi);text-transform:uppercase;margin-bottom:12px}
+.ftlinks{list-style:none;display:flex;flex-direction:column;gap:8px}
+.ftlinks a{font-size:12.5px;font-weight:300;color:var(--chalk3);text-decoration:none;transition:color .2s}
+.ftlinks a:hover{color:var(--chalk)}
+.ftbot{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-top:22px;border-top:1px solid var(--wire)}
+.ftcopy{font-family:var(--mono);font-size:9.5px;color:var(--chalk3)}
+@keyframes fup{to{opacity:1;transform:translateY(0)}}
+@keyframes mqanim{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes scpulse{0%,100%{opacity:1;transform:scaleY(1)}50%{opacity:.2;transform:scaleY(.5)}}
+</style>
+</head>
+<body>
+<div id="c"></div><div id="cr"></div>
+<nav id="nav">
+  <a href="#" class="n-logo">POLL<b>Y</b></a>
+  <ul class="n-links">
+    <li><a href="#features">Platform</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#cta" class="n-cta">Request Demo</a></li>
+  </ul>
+</nav>
+<section id="hero">
+  <div class="hbg"></div>
+  <div class="hgrid" id="hgrid"></div>
+  <div class="hglow" id="hglow"></div>
+  <div class="heyebrow">Precision · Optimization · Logistics · Live Data · Your Fleet</div>
+  <h1 class="hh1">One<br><i>Platform.</i><br><s>Total</s><br>Visibility.</h1>
+  <p class="hsub">POLLY unifies fleet management, route optimization, and inventory intelligence for fuel and lube carriers — and the carriers that will come after them.</p>
+  <div class="hacns">
+    <a href="#cta" class="btn bp">Request Early Access</a>
+    <a href="#story" class="btn bg">See How It Works</a>
+  </div>
+  <div class="hscroll"><div class="hline"></div><span>Scroll to explore</span></div>
+</section>
+<div class="mq">
+  <div class="mqt">
+    <div class="mqi"><div class="mqd"></div>Route Optimization</div><div class="mqi"><div class="mqd"></div>Live Fleet GPS</div><div class="mqi"><div class="mqd"></div>Tank Monitoring</div><div class="mqi"><div class="mqd"></div>Automated Invoicing</div><div class="mqi"><div class="mqd"></div>HOS Compliance</div><div class="mqi"><div class="mqd"></div>Embedded Integration</div><div class="mqi"><div class="mqd"></div>Fleet Health</div><div class="mqi"><div class="mqd"></div>AI Dispatch</div><div class="mqi"><div class="mqd"></div>Order Management</div><div class="mqi"><div class="mqd"></div>Customer Portal</div>
+    <div class="mqi"><div class="mqd"></div>Route Optimization</div><div class="mqi"><div class="mqd"></div>Live Fleet GPS</div><div class="mqi"><div class="mqd"></div>Tank Monitoring</div><div class="mqi"><div class="mqd"></div>Automated Invoicing</div><div class="mqi"><div class="mqd"></div>HOS Compliance</div><div class="mqi"><div class="mqd"></div>Embedded Integration</div><div class="mqi"><div class="mqd"></div>Fleet Health</div><div class="mqi"><div class="mqd"></div>AI Dispatch</div><div class="mqi"><div class="mqd"></div>Order Management</div><div class="mqi"><div class="mqd"></div>Customer Portal</div>
+  </div>
+</div>
+<section id="intro">
+  <p class="ibody rev" data-d="0">The trucking industry is undergoing rapid <b>digital transformation</b> — yet small to mid-size carriers remain <span>chronically underserved.</span> Too large to run manually. Too small for enterprise platforms. The result: <b>disconnected tools, manual processes,</b> and reactive decisions that cost real money every single day.</p>
+  <p class="ibody rev" style="margin-top:28px;opacity:.5" data-d="150">We decided to <b>build the platform that should have existed years ago.</b></p>
+</section>
+<section id="problem">
+  <div class="pgrid">
+    <div>
+      <div class="eyebrow rev">The Gap in the Market</div>
+      <h2 class="st rev" data-d="80">Five problems<br>nobody <i>solved.</i></h2>
+      <div class="gcards">
+        <div class="gcard rev" data-d="0"><div class="gn">01</div><div><div class="gtitle">Disconnected Systems</div><div class="gbody">44% of fleet operators cite integration challenges as their primary pain. No platform consolidates dispatch, routing, inventory, fleet health, billing, and customers at the small carrier price point.</div></div></div>
+        <div class="gcard rev" data-d="70"><div class="gn">02</div><div><div class="gtitle">Route Optimization Quality</div><div class="gbody">Existing tools quit mid-route. No small-carrier tool delivers genuine multi-constraint optimization accounting for HOS, load, road restrictions, and tank offload rates in gallons per minute.</div></div></div>
+        <div class="gcard rev" data-d="140"><div class="gn">03</div><div><div class="gtitle">Zero Inventory Intelligence</div><div class="gbody">No existing platform integrates live customer tank monitoring with route optimization. This capability is entirely absent from every competitor — making reactive phone-call dispatching the industry norm.</div></div></div>
+        <div class="gcard rev" data-d="210"><div class="gn">04</div><div><div class="gtitle">Integration Fear</div><div class="gbody">40% of small fleets cite upfront complexity as why they don't adopt new software. POLLY's embedded deployment model eliminates this barrier entirely — it works inside the tools they already use.</div></div></div>
+        <div class="gcard rev" data-d="280"><div class="gn">05</div><div><div class="gtitle">Poor Interface Design</div><div class="gbody">Even highly-rated platforms list their UI as both a strength and weakness in reviews simultaneously. No platform has achieved a genuinely dispatcher-optimized design. Until now.</div></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="eyebrow rev">The Opportunity</div>
+      <h2 class="st rev" data-d="80">A <s>$30B</s><br>market waiting.</h2>
+      <p class="rev" style="font-size:13.5px;font-weight:300;color:var(--chalk2);line-height:1.8;margin-top:16px;margin-bottom:28px" data-d="120">91.5% of US carriers operate 10 or fewer trucks. The fuel and lube vertical alone counts ~17,000 operators. At 1% penetration of the trucking SAM, addressable revenue exceeds $78M annually.</p>
+      <div class="mnums">
+        <div class="mnum rev" data-d="0"><div class="mnv">$30<span>.5B</span></div><div class="mnl">Fleet mgmt software market 2026</div></div>
+        <div class="mnum rev" data-d="90"><div class="mnv">~17<span>k</span></div><div class="mnl">Fuel &amp; lube operators (US)</div></div>
+        <div class="mnum rev" data-d="180"><div class="mnv">91<span>%</span></div><div class="mnl">US carriers with ≤10 trucks</div></div>
+        <div class="mnum rev" data-d="270"><div class="mnv">$6.2<span>M+</span></div><div class="mnl">ARR at 1% fuel vertical penetration</div></div>
+      </div>
+      <div class="mnum rev" style="margin-top:10px;background:rgba(43,108,176,.08);border-color:rgba(43,108,176,.22)" data-d="360"><div class="mnv" style="font-size:26px">$78<span>M+</span></div><div class="mnl">Trucking SAM at 1% penetration</div></div>
+    </div>
+  </div>
+</section>
+<section id="who">
+  <div class="wgrid">
+    <div>
+      <div class="eyebrow rev">What POLLY Stands For</div>
+      <h2 class="st rev" data-d="80">Built from<br>a <i>conviction.</i></h2>
+      <div class="astack rev" data-d="120">
+        <div class="arow"><span class="aletter">P</span><div><div class="aword">Precision</div><div class="adesc">Every route, every load, every decision — modeled with accuracy</div></div></div>
+        <div class="arow"><span class="aletter">O</span><div><div class="aword">Optimization</div><div class="adesc">Maximum gallons delivered, minimum miles driven, zero waste</div></div></div>
+        <div class="arow"><span class="aletter">L</span><div><div class="aword">Logistics</div><div class="adesc">Purpose-built for the complexity of liquid bulk distribution</div></div></div>
+        <div class="arow"><span class="aletter">L</span><div><div class="aword">Live Data</div><div class="adesc">Real-time visibility across fleet, inventory, and customers</div></div></div>
+        <div class="arow"><span class="aletter">Y</span><div><div class="aword">Your Fleet</div><div class="adesc">Not generic software adapted. Purpose-built for how you operate</div></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="mquote rev" data-d="0">"The trucking industry deserves better tools than the ones it has been handed. The manual processes, the disconnected systems — the hours spent on tasks that should take minutes."</div>
+      <p class="rev" style="font-family:var(--mono);font-size:10.5px;color:var(--chalk3);margin-top:14px;letter-spacing:.06em" data-d="80">— Alexander Jensen, Founder · Polly Logistics LLC</p>
+      <p class="vbody rev" data-d="160">We envision a logistics industry where every carrier — regardless of fleet size — has access to the same operational intelligence as the largest players in the world. Where decisions are driven by real-time data, not gut instinct.</p>
+      <p class="vbody rev" style="margin-top:14px;color:var(--fuel-hi)" data-d="220">Polly Logistics targets fuel and lube carriers at launch, with a clear roadmap to the broader trucking market and long-term goals in warehousing, air, and ocean freight.</p>
+    </div>
+  </div>
+</section>
+<section id="story">
+  <div class="ssticky" id="ssticky">
+    <div class="sbgtext" id="sbgtext">DISPATCH</div>
+    <div class="strack" id="strack">
+      <div class="spanel"><div class="spinn">
+        <div><div class="spnum">01</div><h3 class="sptitle">Dispatcher-<i>first</i> design.</h3><p class="spbody">Every screen in POLLY is built for the person who needs to see what matters, act fast, and never miss an exception — even when 8 trucks are rolling at once. Not designed for IT demos. Designed for dispatch floors.</p><div class="spprog" id="prog1"><div class="spdot a"></div><div class="spdot"></div><div class="spdot"></div><div class="spdot"></div><div class="spdot"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:center"><div class="svc"><div class="svh">Live Exceptions<div class="svlive"><div class="svld"></div>Live</div></div><div class="svrow"><span>T-4 · Martinez — HOS Warning</span><span class="svv a">2.1 hrs left</span></div><div class="svrow"><span>Perry Fleet — Tank Critical</span><span class="svv" style="color:#FC8181">12% · Runout Risk</span></div><div class="svrow"><span>Route B — Traffic Delay</span><span class="svv a">+38 min</span></div><div class="svrow"><span>INV-10041 — Payment Due</span><span class="svv a">Overdue 3d</span></div><div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--wire);display:flex;gap:7px"><span class="pill pa">4 Active</span><span class="pill pr">1 Critical</span></div></div></div>
+      </div></div>
+      <div class="spanel"><div class="spinn">
+        <div><div class="spnum">02</div><h3 class="sptitle">Route <i>intelligence</i> that actually works.</h3><p class="spbody">OR-Tools + HERE Truck Routing. Multi-constraint solving: HOS windows, bridge weight limits, hazmat restrictions, offload rates from hose flow in gallons per minute, terminal availability, and live traffic. Not just "shortest path."</p><div class="spprog" id="prog2"><div class="spdot"></div><div class="spdot a"></div><div class="spdot"></div><div class="spdot"></div><div class="spdot"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:center"><div class="svc"><div class="svh">Route B · Today<div class="svlive"><div class="svld"></div>Optimized</div></div><div class="svrow"><span>Truck</span><span class="svv">T-7 · Thompson</span></div><div class="svrow"><span>Stops</span><span class="svv b">11 of 12</span></div><div class="svrow"><span>Gallons to deliver</span><span class="svv">5,200 gal DEF</span></div><div class="svrow"><span>HOS window</span><span class="svv g">9.4 hrs remaining</span></div><div class="svrow"><span>Est. completion</span><span class="svv g">5:48 PM ✓</span></div><div class="svrow"><span>Route status</span><span class="pill pg">On Schedule</span></div></div></div>
+      </div></div>
+      <div class="spanel"><div class="spinn">
+        <div><div class="spnum">03</div><h3 class="sptitle">Live inventory <i>intelligence.</i></h3><p class="spbody">POLLY maintains a live inventory ledger distinguishing four states simultaneously: stock at customer sites, product on trucks not yet delivered, committed inventory for open orders, and available inventory free to assign. No competitor sees all four at once.</p><div class="spprog" id="prog3"><div class="spdot"></div><div class="spdot"></div><div class="spdot a"></div><div class="spdot"></div><div class="spdot"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:center"><div class="svc"><div class="svh">Inventory Ledger · DEF</div><div class="svrow"><span>At customer sites</span><span class="svv b">84,200 gal</span></div><div class="svrow"><span>On trucks (in transit)</span><span class="svv a">12,400 gal</span></div><div class="svrow"><span>Committed (open orders)</span><span class="svv">19,000 gal</span></div><div class="svrow"><span>Available to assign</span><span class="svv g">31,800 gal</span></div><div style="margin-top:12px;padding:9px;background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);border-radius:4px;font-size:10.5px"><span style="color:#FC8181">⚠ 3 customers projected runout &lt;48 hrs</span></div></div></div>
+      </div></div>
+      <div class="spanel"><div class="spinn">
+        <div><div class="spnum">04</div><h3 class="sptitle">Embedded anywhere. <i>Disrupts nothing.</i></h3><p class="spbody">POLLY's primary competitive differentiator. A single iframe snippet deploys POLLY as a native tab inside any existing web-based platform — fully authenticated via SSO, connected to fleet data, reading context from the parent system via JavaScript bridge. No workflow disruption.</p><div class="spprog" id="prog4"><div class="spdot"></div><div class="spdot"></div><div class="spdot"></div><div class="spdot a"></div><div class="spdot"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:center"><div class="svc" style="font-family:var(--body)"><div class="svh">Integration Options</div><div style="display:flex;flex-direction:column;gap:8px;margin-top:4px"><div style="background:var(--ink4);border:1px solid var(--wire);border-radius:4px;padding:11px;font-size:11px;color:var(--chalk2)"><div style="font-family:var(--mono);font-size:9px;color:var(--fuel-hi);margin-bottom:4px">STANDALONE PLATFORM</div>Complete replacement. Full transition support. Dedicated account manager at 20:1 ratio.</div><div style="background:rgba(43,108,176,.08);border:1px solid rgba(43,108,176,.22);border-radius:4px;padding:11px;font-size:11px;color:var(--chalk2)"><div style="font-family:var(--mono);font-size:9px;color:var(--amber-hi);margin-bottom:4px">★ KEY DIFFERENTIATOR · EMBEDDED</div>One iframe snippet. POLLY as a native tab inside your existing software. Zero disruption.</div><div style="background:var(--ink4);border:1px solid var(--wire);border-radius:4px;padding:9px;font-family:var(--mono);font-size:9px;color:var(--chalk3)">REST API · Webhooks · EDI (Stedi) · CSV/SFTP · SSO/SAML</div></div></div></div>
+      </div></div>
+      <div class="spanel"><div class="spinn">
+        <div><div class="spnum">05</div><h3 class="sptitle"><s>AI</s> when the data <i>earns it.</i></h3><p class="spbody">POLLY's AI and ML are a deliberate secondary layer — not a launch promise. Phase A launches with deterministic rules-based optimization from day one. Phase B unlocks machine learning per account after 2–4 months of real operational data: predictive ETAs, demand forecasting, exception prediction.</p><div class="spprog" id="prog5"><div class="spdot"></div><div class="spdot"></div><div class="spdot"></div><div class="spdot"></div><div class="spdot a"></div></div></div>
+        <div style="display:flex;align-items:center;justify-content:center"><div class="svc"><div class="svh">AI/ML Roadmap</div><div class="svrow"><span><span class="pill pg" style="margin-right:6px">Phase A</span>Launch</span><span class="svv">Rules-based, 100% reliable</span></div><div class="svrow"><span><span class="pill pb" style="margin-right:6px">Phase B</span>Months 6–12</span><span class="svv">ML layer (data-gated)</span></div><div style="margin-top:12px;display:flex;flex-direction:column;gap:6px;font-size:10.5px;color:var(--chalk3)"><div style="display:flex;gap:7px"><span style="color:var(--fuel-hi)">→</span>Predictive ETAs &amp; dwell time</div><div style="display:flex;gap:7px"><span style="color:var(--fuel-hi)">→</span>Demand &amp; exception forecasting</div><div style="display:flex;gap:7px"><span style="color:var(--fuel-hi)">→</span>ML-enhanced route sequencing</div><div style="display:flex;gap:7px"><span style="color:var(--fuel-hi)">→</span>Fuel stop optimization</div></div></div></div>
+      </div></div>
+    </div>
+  </div>
+</section>
+<section id="platform">
+  <div class="phead"><div class="eyebrow rev" style="justify-content:center">The Interface</div><h2 class="st rev" data-d="60" style="margin-bottom:12px">Designed for<br><i>dispatchers.</i></h2><p class="rev" style="font-size:14px;font-weight:300;color:var(--chalk2);max-width:420px;margin:0 auto;line-height:1.75" data-d="100">Clean, fast, and built for the operational realities of a busy dispatch floor.</p></div>
+  <div class="aframe rev" data-d="80">
+    <div class="abar"><div class="adot" style="background:#FF5F57"></div><div class="adot" style="background:#FFBD2E"></div><div class="adot" style="background:#28C840"></div><div class="aurl">app.pollylogistics.com</div></div>
+    <div class="alayout">
+      <div class="aside"><div class="alogoa"><div class="alogotext">POLLY</div><div class="atenant">Bailey's Inc · Dispatcher</div></div><div class="anav on">⊞&nbsp;&nbsp;Dashboard</div><div class="anav">◉&nbsp;&nbsp;Live Fleet</div><div class="anav">⊙&nbsp;&nbsp;Fleet Health</div><div class="anav">◎&nbsp;&nbsp;Customers</div><div class="anav">◷&nbsp;&nbsp;Scheduler</div><div class="anav">≡&nbsp;&nbsp;Orders</div><div class="anav">⊕&nbsp;&nbsp;Route Optimization</div><div class="anav">▤&nbsp;&nbsp;Inventory</div><div class="anav">◈&nbsp;&nbsp;Billing</div><div class="anav">◇&nbsp;&nbsp;Pricing</div><div class="anav">▦&nbsp;&nbsp;Reports</div><div class="anav">⊗&nbsp;&nbsp;Settings</div></div>
+      <div class="amain">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="apgt">Dashboard</div><div class="apsub">Monday, May 11, 2026 · Bailey's Inc</div></div><span class="pill pg" style="margin-top:4px">System Nominal</span></div>
+        <div class="akpis"><div class="akpi"><div class="akpiv" style="color:var(--fuel-hi)">7</div><div class="akpil">Active Trucks</div></div><div class="akpi"><div class="akpiv">23</div><div class="akpil">Open Orders</div></div><div class="akpi"><div class="akpiv" style="color:var(--amber-hi)">3</div><div class="akpil">Exceptions</div></div><div class="akpi"><div class="akpiv" style="color:var(--signal-hi)">$14.2k</div><div class="akpil">Today's Revenue</div></div></div>
+        <div><div class="ath"><span>Customer</span><span>Product</span><span>Status</span><span>Driver</span></div><div class="atr"><span>Fort Valley Farm Supply</span><span>DEF · 3,000 gal</span><span><span class="pill pg">Delivered</span></span><span style="font-family:var(--mono);font-size:9.5px;color:var(--chalk3)">Martinez</span></div><div class="atr"><span>Macon Industrial Park</span><span>Diesel · 8,500 gal</span><span><span class="pill pb">In Route</span></span><span style="font-family:var(--mono);font-size:9.5px;color:var(--chalk3)">Thompson</span></div><div class="atr"><span>Perry Fleet Services</span><span>DEF · 2,000 gal</span><span><span class="pill pa">Scheduled</span></span><span style="font-family:var(--mono);font-size:9.5px;color:var(--chalk3)">—</span></div><div class="atr"><span>Warner Robins Equip.</span><span>Hyd. Oil · 500 gal</span><span><span class="pill pr">Urgent</span></span><span style="font-family:var(--mono);font-size:9.5px;color:var(--chalk3)">Unassigned</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="features">
+  <div class="finn"><div class="fhead"><div><div class="eyebrow rev">The Platform</div><h2 class="st rev" data-d="80">Every tool<br><i>you need.</i></h2></div><p class="fintro rev" data-d="120">Built from the ground up for fuel and lube carriers — not adapted from generic freight software. Every feature reflects how your operation actually runs, from terminal to tank.</p></div>
+  <div class="fgrid">
+    <div class="fc rev" data-d="0"><span class="fcnum">01</span><span class="fcicon">🗺️</span><div class="fcname">Route Optimization</div><div class="fcdesc">OR-Tools + HERE Truck Routing. Multi-constraint VRP solving: HOS windows, bridge weight, hazmat roads, offload rates, terminal availability. Maximum gallons, minimum miles.</div></div>
+    <div class="fc rev" data-d="80"><span class="fcnum">02</span><span class="fcicon">📡</span><div class="fcname">Live Fleet Tracking</div><div class="fcdesc">Real-time GPS via Samsara and Motive API connectors. HOS status, exception flags, driver geofence alerts on one map. Updated every 30 seconds.</div></div>
+    <div class="fc rev" data-d="160"><span class="fcnum">03</span><span class="fcicon">⛽</span><div class="fcname">Tank Monitoring</div><div class="fcdesc">Live customer tank levels via radar and pressure probe sensors. Runout predictions, automated delivery recommendations. Managed as a service — one contract, one contact.</div></div>
+    <div class="fc rev" data-d="0"><span class="fcnum">04</span><span class="fcicon">📋</span><div class="fcname">Order Management</div><div class="fcdesc">Create, prioritize, and track deliveries from order through proof of delivery. Emergency orders surface instantly. Route Builder or direct dispatch — one click.</div></div>
+    <div class="fc rev" data-d="80"><span class="fcnum">05</span><span class="fcicon">🔧</span><div class="fcname">Fleet Health</div><div class="fcdesc">Vehicle status, maintenance schedules, driver HOS tracking, fault codes, and inspection logs. Predictive maintenance alerts before a breakdown costs you a delivery.</div></div>
+    <div class="fc rev" data-d="160"><span class="fcnum">06</span><span class="fcicon">💰</span><div class="fcname">Billing &amp; Invoicing</div><div class="fcdesc">Auto-generated invoices on delivery completion. Stripe payment links. Live AR dashboard. Per-customer pricing rules, volume tiers, and fuel surcharge calculators.</div></div>
+  </div></div>
+</section>
+<section id="roadmap">
+  <div class="eyebrow rev">Implementation Roadmap</div>
+  <h2 class="st rev" data-d="80">Built in <i>phases.</i><br>Revenue from <s>day one.</s></h2>
+  <p class="rev" style="font-size:13.5px;font-weight:300;color:var(--chalk2);max-width:520px;margin-top:14px;line-height:1.8" data-d="120">Four deliberate phases. Each builds on the last. The business is cash-flow positive from the very first customer — with infrastructure costs beginning under $700/month.</p>
+  <div class="rgrid">
+    <div class="rp rev" data-d="0"><div class="rpst snow">Building Now</div><div class="rpn">Phase 1</div><div class="rpt">Foundation</div><div class="rptm">Months 1–9</div><div class="ritems"><div class="ritem">Samsara &amp; Motive API connectors</div><div class="ritem">Live fleet map &amp; GPS tracking</div><div class="ritem">Order management &amp; dispatch</div><div class="ritem">Exception alerting (email &amp; SMS)</div><div class="ritem">Inventory visibility dashboard</div><div class="ritem">Auth0 SSO authentication</div></div></div>
+    <div class="rp rev" data-d="80"><div class="rpst splan">Planned</div><div class="rpn">Phase 2</div><div class="rpt">Integration</div><div class="rptm">Months 6–12</div><div class="ritems"><div class="ritem">Embeddable Web Components</div><div class="ritem">OAuth 2.0 &amp; SAML SSO</div><div class="ritem">EDI translation via Stedi</div><div class="ritem">CSV/SFTP ingestion</div><div class="ritem">Beta customer onboarding</div></div></div>
+    <div class="rp rev" data-d="160"><div class="rpst splan">Planned</div><div class="rpn">Phase 3</div><div class="rpt">AI Layer</div><div class="rptm">Months 10–18</div><div class="ritems"><div class="ritem">Predictive ETA models</div><div class="ritem">Dwell time prediction</div><div class="ritem">Exception forecasting</div><div class="ritem">Demand forecasting</div><div class="ritem">ML-enhanced routing</div></div></div>
+    <div class="rp rev" data-d="240"><div class="rpst splan">Planned</div><div class="rpn">Phase 4</div><div class="rpt">Full Platform</div><div class="rptm">Months 15–24</div><div class="ritems"><div class="ritem">Full CRM module</div><div class="ritem">Contract creation &amp; POs</div><div class="ritem">Full AR/AP suite</div><div class="ritem">Competitor migration program</div><div class="ritem">Expansion planning</div></div></div>
+  </div>
+</section>
+<section id="moat">
+  <div class="moatinn"><div class="eyebrow rev">Defensibility</div><h2 class="st rev" data-d="80">Six reasons<br>carriers <i>stay.</i></h2><p class="rev" style="font-size:13.5px;font-weight:300;color:var(--chalk2);max-width:500px;margin-top:14px;line-height:1.8" data-d="120">Defensibility isn't built on launch day — it's built through data accumulation, operational depth, and switching costs that compound over time.</p>
+  <div class="mgrid">
+    <div class="mc rev" data-d="0"><div class="mcicon">📈</div><div class="mctitle">Data Flywheel</div><div class="mcbody">Every route optimized generates training data. More customers → better models → more accurate platform. A competitor starting today cannot replicate years of proprietary fuel route data.</div></div>
+    <div class="mc rev" data-d="80"><div class="mcicon">🔒</div><div class="mctitle">High Switching Costs</div><div class="mcbody">Once routes, inventory, billing, and customer relationships run through POLLY, switching means retraining dispatchers, rebuilding integrations, and losing all operational history.</div></div>
+    <div class="mc rev" data-d="160"><div class="mcicon">🔩</div><div class="mctitle">Hardware in the Ground</div><div class="mcbody">Sensors physically installed at customer tank sites create physical lock-in. Displacing them requires field operations, contractor coordination, and tens of thousands in replacement cost.</div></div>
+    <div class="mc rev" data-d="0"><div class="mcicon">🎯</div><div class="mctitle">Vertical Specificity</div><div class="mcbody">Built around metered tanker trailers, terminal loading dynamics, and fuel delivery windows. Domain knowledge no horizontal competitor can replicate from scratch.</div></div>
+    <div class="mc rev" data-d="80"><div class="mcicon">🔗</div><div class="mctitle">Multi-Party Chain Lock-In</div><div class="mcbody">When POLLY is embedded across carrier, oil company, and customer sites — removing it breaks the visibility chain for all three simultaneously.</div></div>
+    <div class="mc rev" data-d="160"><div class="mcicon">🌐</div><div class="mctitle">Network Effects</div><div class="mcbody">Fuel distributors in the same region share terminals and customer types. Word of mouth in a tight-knit vertical moves faster than any ad campaign.</div></div>
+  </div></div>
+</section>
+<section id="expansion">
+  <div class="eyebrow rev">The Bigger Picture</div>
+  <h2 class="st rev" data-d="80">Starting focused.<br><i>Thinking bigger.</i></h2>
+  <p class="rev" style="font-size:13.5px;font-weight:300;color:var(--chalk2);max-width:520px;margin-top:14px;line-height:1.8" data-d="100">POLLY enters through the fuel and lube vertical. But the operational intelligence we're building has no ceiling.</p>
+  <div class="evis rev" data-d="140">
+    <div class="ecirc"><div class="enum">Phase 1 · Now</div><div class="elabel">Fuel &amp; Lube</div><div class="edesc">~17,000 US operators. DEF, diesel, lubricants, propane. The vertical where POLLY is purpose-built to win.</div></div>
+    <div class="earr">→</div>
+    <div class="ecirc"><div class="enum">Phase 2 · Year 2+</div><div class="elabel">Trucking</div><div class="edesc">~60,000 US carriers with 5–100 trucks. Operational intelligence applied to general trucking and LTL.</div></div>
+    <div class="earr">→</div>
+    <div class="ecirc"><div class="enum">Phase 3 · Long-Term</div><div class="elabel">Warehousing</div><div class="edesc">The logistics chain extends to distribution centers. POLLY's inventory and routing intelligence translates naturally.</div></div>
+    <div class="earr">→</div>
+    <div class="ecirc"><div class="enum">Vision · Beyond</div><div class="elabel">Air &amp; Ocean</div><div class="edesc">Long-horizon expansion. The operational layer that connects every mode of transport.</div></div>
+  </div>
+</section>
+<section id="deploy">
+  <div class="dinn"><div class="eyebrow rev">Deployment Options</div><h2 class="st rev" data-d="80">Works the way<br><i>you work.</i></h2>
+  <div class="dgrid">
+    <div class="dcard rev" data-d="0"><span class="dbadge db1">Standalone Platform</span><div class="dtitle">Complete System Replacement</div><div class="dbody">For carriers ready to modernize from the ground up. POLLY replaces all existing tools, with Polly Logistics as an active operational partner throughout the entire client relationship.</div><div class="dlist"><div class="ditem">Full data migration from legacy systems</div><div class="ditem">Dedicated account manager (20:1 ratio)</div><div class="ditem">Structured staff training &amp; onboarding</div><div class="ditem">Telemetry hardware sourcing &amp; installation</div><div class="ditem">Every POLLY module included</div></div></div>
+    <div class="dcard dhot rev" data-d="100"><span class="dbadge db2">★ Key Differentiator</span><div class="dtitle">Embedded Integration</div><div class="dbody">For carriers with legacy systems they can't move away from. POLLY appears as a native tab inside their existing software. One iframe snippet. Zero workflow disruption. No competitor offers this.</div><div class="dlist"><div class="ditem">Single iframe — one conversation with IT</div><div class="ditem">Loads inside any web-based platform via SSO</div><div class="ditem">JavaScript bridge reads parent system context</div><div class="ditem">Per-module pricing — deploy only what you need</div><div class="ditem">No data migration required to get started</div></div></div>
+  </div></div>
+</section>
+<section id="pricing">
+  <div class="prhead"><div class="eyebrow rev" style="justify-content:center">Pricing</div><h2 class="st rev" data-d="80" style="margin-bottom:10px">Simple, <i>scalable</i> pricing.</h2><p class="rev" style="font-size:13.5px;font-weight:300;color:var(--chalk2);max-width:420px;margin:0 auto;line-height:1.8" data-d="100">Asset-based pricing that scales with your fleet. All modules included. No per-seat fees, no hidden charges.</p></div>
+  <div class="prgrid">
+    <div class="prc rev" data-d="0"><div class="prctier">Starter</div><div class="prcprice"><sup>$</sup>700<sup style="font-size:14px">/mo</sup></div><div class="prccad">minimum · up to ~8 assets · then $91–93/asset/mo</div><div class="prcdiv"></div><ul class="prcfl"><li class="prcf">Full dispatch &amp; order management</li><li class="prcf">Multi-constraint route optimization</li><li class="prcf">Live GPS fleet tracking</li><li class="prcf">Customer &amp; contract management</li><li class="prcf">Invoicing &amp; billing</li><li class="prcf">Exception alerting (email + SMS)</li></ul><a href="#cta" class="btn bg" style="display:block;text-align:center">Get Started</a></div>
+    <div class="prc hot rev" data-d="120"><div class="prcbadge">Most Common</div><div class="prctier">Core / Professional</div><div class="prcprice"><sup>$</sup>88<sup style="font-size:14px">/asset</sup></div><div class="prccad">16–60 assets · $1,456–$4,800/mo total</div><div class="prcdiv"></div><ul class="prcfl"><li class="prcf">Everything in Starter</li><li class="prcf">Live tank inventory monitoring</li><li class="prcf">Managed sensor service (hardware incl.)</li><li class="prcf">Fleet health &amp; predictive maintenance</li><li class="prcf">Advanced analytics &amp; reports</li><li class="prcf">Pricing &amp; quoting engine</li><li class="prcf">Customer portal</li></ul><a href="#cta" class="btn bp" style="display:block;text-align:center">Request Demo</a></div>
+    <div class="prc rev" data-d="240"><div class="prctier">Enterprise</div><div class="prcprice" style="font-size:34px;padding:6px 0">Custom</div><div class="prccad">61–100+ assets · from $4,880/mo</div><div class="prcdiv"></div><ul class="prcfl"><li class="prcf">Everything in Core</li><li class="prcf">Multi-carrier tenant management</li><li class="prcf">AI/ML module (data-gated unlock)</li><li class="prcf">Custom integrations &amp; REST API</li><li class="prcf">Embedded deployment option</li><li class="prcf">SLA-backed uptime guarantees</li></ul><a href="#cta" class="btn bg" style="display:block;text-align:center">Contact Sales</a></div>
+  </div>
+  <p class="rev" style="font-size:11px;font-weight:300;color:var(--chalk3);margin-top:20px;text-align:center;font-family:var(--mono)" data-d="60">Embedded modules from $16–42/asset/mo · $350 min · Onboarding from $2,000 · Beta partners receive software &amp; hardware at no cost</p>
+</section>
+<section id="cta">
+  <div class="cglow"></div>
+  <h2 class="ch rev">Ready to run a<br>tighter <i>operation?</i></h2>
+  <p class="csub rev" data-d="80">Get a 30-minute live demo tailored to your fleet size and delivery area. Beta partners receive software and hardware at no cost during the testing phase.</p>
+  <div class="cacts rev" data-d="140">
+    <a href="mailto:hello@pollylogistics.com" class="btn bp" style="font-size:13px;padding:14px 32px">Request Early Access</a>
+    <a href="mailto:hello@pollylogistics.com" class="btn bg" style="font-size:13px;padding:14px 32px">hello@pollylogistics.com</a>
+  </div>
+</section>
+<footer>
+  <div class="ftinn">
+    <div><div class="ftbrand">POLL<b>Y</b></div><p class="fttag">Precision. Optimization. Logistics. Live Data. Your Fleet. — The operating platform for fuel and lube carriers, built to expand across the entire logistics industry.</p></div>
+    <div><div class="ftch">Platform</div><ul class="ftlinks"><li><a href="#">Route Optimization</a></li><li><a href="#">Live Fleet</a></li><li><a href="#">Tank Monitoring</a></li><li><a href="#">Order Management</a></li><li><a href="#">Fleet Health</a></li><li><a href="#">Billing</a></li></ul></div>
+    <div><div class="ftch">Company</div><ul class="ftlinks"><li><a href="#">About</a></li><li><a href="#">Roadmap</a></li><li><a href="#">Careers</a></li><li><a href="#">Contact</a></li></ul></div>
+    <div><div class="ftch">Legal</div><ul class="ftlinks"><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li><li><a href="#">Security</a></li></ul></div>
+  </div>
+  <div class="ftbot"><span class="ftcopy">© 2026 Polly Logistics LLC — All rights reserved</span><span class="ftcopy">pollylogistics.com</span></div>
+</footer>
+<script>
+const C=document.getElementById('c'),CR=document.getElementById('cr');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;C.style.left=mx+'px';C.style.top=my+'px'});
+(function ar(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;CR.style.left=rx+'px';CR.style.top=ry+'px';requestAnimationFrame(ar)})();
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{CR.style.width='48px';CR.style.height='48px';CR.style.borderColor='rgba(91,163,245,.5)';C.style.width='10px';C.style.height='10px'});
+  el.addEventListener('mouseleave',()=>{CR.style.width='28px';CR.style.height='28px';CR.style.borderColor='rgba(251,182,60,.35)';C.style.width='7px';C.style.height='7px'});
+});
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('s',scrollY>50),{passive:true});
+const hgrid=document.getElementById('hgrid'),hglowEl=document.getElementById('hglow');
+addEventListener('scroll',()=>{
+  const s=scrollY,h=innerHeight;
+  if(s<h*1.5){hgrid.style.transform=`perspective(900px) rotateX(22deg) scale(1.4) translateY(${s*.22}px)`;hglowEl.style.transform=`translateX(-50%) translateY(${-s*.12}px)`;}
+},{passive:true});
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(en=>{if(en.isIntersecting){const el=en.target,d=parseInt(el.dataset.d||0);setTimeout(()=>el.classList.add('v'),d);obs.unobserve(el);}});
+},{threshold:.1});
+document.querySelectorAll('.rev').forEach(el=>obs.observe(el));
+const story=document.getElementById('story'),strack=document.getElementById('strack'),sbgtext=document.getElementById('sbgtext');
+const bgW=['DISPATCH','OPTIMIZE','INVENTORY','INTEGRATE','INTELLIGENT'];
+addEventListener('scroll',()=>{
+  const rect=story.getBoundingClientRect(),scrolled=-rect.top,total=story.offsetHeight-innerHeight;
+  const p=Math.max(0,Math.min(1,scrolled/total));
+  strack.style.transform=`translateX(${-p*4*innerWidth}px)`;
+  const idx=Math.min(Math.floor(p*5),4);
+  sbgtext.textContent=bgW[idx];
+  sbgtext.style.transform=`translateX(${p*-6}%)`;
+  for(let i=1;i<=5;i++){const pg=document.getElementById('prog'+i);if(!pg)continue;pg.querySelectorAll('.spdot').forEach((d,j)=>d.classList.toggle('a',j===idx));}
+},{passive:true});
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'});}});
+});
+</script>
+</body>
+</html>
