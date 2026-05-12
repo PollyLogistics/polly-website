@@ -415,7 +415,7 @@ const bgW=['DISPATCH','OPTIMIZE','INVENTORY','INTEGRATE','INTELLIGENT'];
 addEventListener('scroll',()=>{
   const rect=story.getBoundingClientRect(),scrolled=-rect.top,total=story.offsetHeight-innerHeight;
   const p=Math.max(0,Math.min(1,scrolled/total));
-  strack.style.transform=`translateX(${-p*(N-1)*innerWidth}px)`;
+  strack.style.transform=`translateX(${-p*4*innerWidth}px)`;
   const idx=Math.min(Math.floor(p*5),4);
   sbgtext.textContent=bgW[idx];
   sbgtext.style.transform=`translateX(${p*-6}%)`;
