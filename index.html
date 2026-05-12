@@ -4,1065 +4,409 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>POLLY — Logistics Intelligence Platform</title>
-
-<!-- ── FONTS ──────────────────────────────────────────────────────────────────
-     Outfit: clean, modern display font for headings
-     Inter: highly readable body font used by most serious tech companies
-     JetBrains Mono: monospace for labels, tags, and UI details
-─────────────────────────────────────────────────────────────────────────────-->
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
-
 <style>
-/* ── RESET ────────────────────────────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#09090B;--ink2:#0F0F12;--ink3:#18181C;--ink4:#222228;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --blue:#2563EB;--blue-hi:#60A5FA;--blue-lo:rgba(37,99,235,0.10);
+  --amber:#F59E0B;--amber-hi:#FCD34D;--amber-lo:rgba(245,158,11,0.10);
+  --green:#059669;--green-hi:#34D399;
+  --white:#F8F8F6;--muted:rgba(248,248,246,0.45);--faint:rgba(248,248,246,0.20);
+  --font-head:'Outfit',sans-serif;--font-body:'Inter',sans-serif;--font-mono:'JetBrains Mono',monospace;
+}
+html{overflow-x:hidden;scroll-behavior:smooth}
+body{background:var(--ink);color:var(--white);font-family:var(--font-body);font-size:16px;line-height:1.6;overflow-x:hidden;cursor:none}
 
-/* ── DESIGN TOKENS ────────────────────────────────────────────────────────── */
-:root {
-  /* Colors */
-  --ink:      #09090B;   /* near-black background */
-  --ink2:     #0F0F12;   /* slightly lighter surface */
-  --ink3:     #18181C;   /* card backgrounds */
-  --ink4:     #222228;   /* hover states */
-  --border:   rgba(255,255,255,0.07);
-  --border2:  rgba(255,255,255,0.12);
+/* ── CURSOR ── */
+#cur-dot{position:fixed;width:6px;height:6px;background:var(--amber-hi);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .15s,height .15s}
+#cur-ring{position:fixed;width:26px;height:26px;border:1px solid rgba(252,211,77,.3);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .2s,height .2s,border-color .2s}
 
-  --blue:     #2563EB;   /* primary brand blue */
-  --blue-hi:  #60A5FA;   /* lighter blue for accents */
-  --blue-lo:  rgba(37,99,235,0.10);
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;transition:background .35s,border-color .35s;border-bottom:1px solid transparent}
+nav.scrolled{background:rgba(9,9,11,.92);backdrop-filter:blur(16px);border-color:var(--border)}
+.nav-logo{font-family:var(--font-head);font-size:17px;font-weight:800;letter-spacing:.3em;color:var(--white);text-decoration:none}
+.nav-logo span{color:var(--amber-hi)}
+.nav-links{display:flex;gap:4px;list-style:none;align-items:center}
+.nav-links a{font-family:var(--font-body);font-size:13px;font-weight:500;color:var(--muted);text-decoration:none;padding:6px 14px;border-radius:6px;transition:background .2s,color .2s;letter-spacing:.01em}
+.nav-links a:hover{background:var(--ink3);color:var(--white)}
+.nav-cta{background:var(--blue)!important;color:var(--white)!important;margin-left:8px}
+.nav-cta:hover{background:var(--blue-hi)!important}
 
-  --amber:    #F59E0B;   /* amber accent */
-  --amber-hi: #FCD34D;   /* lighter amber */
-  --amber-lo: rgba(245,158,11,0.10);
+/* ── HERO ── */
+#hero{height:100vh;min-height:600px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:0 24px}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:52px 52px;transform:perspective(800px) rotateX(20deg) scale(1.35);transform-origin:50% 100%;will-change:transform}
+.hero-glow{position:absolute;bottom:-80px;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse at 50% 80%,rgba(37,99,235,.18) 0%,transparent 65%);pointer-events:none}
+.hero-label{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;color:var(--amber-hi);text-transform:uppercase;position:relative;z-index:2;opacity:0;animation:fadeUp .6s .2s forwards;margin-bottom:20px}
+.hero-h1{font-family:var(--font-head);font-size:clamp(36px,4.5vw,64px);font-weight:700;line-height:1.1;letter-spacing:-.02em;color:var(--white);position:relative;z-index:2;opacity:0;animation:fadeUp .7s .35s forwards;max-width:640px}
+.hero-h1 em{font-style:normal;color:var(--blue-hi)}
+.hero-sub{font-size:16px;font-weight:400;color:var(--muted);max-width:440px;line-height:1.7;position:relative;z-index:2;opacity:0;animation:fadeUp .7s .5s forwards;margin-top:18px}
+.hero-actions{display:flex;gap:12px;margin-top:32px;position:relative;z-index:2;opacity:0;animation:fadeUp .7s .65s forwards}
+.hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:2;opacity:0;animation:fadeUp .8s 1.1s forwards}
+.hero-scroll span{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase}
+.scroll-line{width:1px;height:40px;background:linear-gradient(var(--amber-hi),transparent);animation:scrollPulse 2s ease-in-out infinite}
 
-  --green:    #059669;
-  --green-hi: #34D399;
+/* ── POLLY sidebar preview inside hero ── */
+.hero-app-preview{position:absolute;right:5%;bottom:80px;width:260px;background:var(--ink3);border:1px solid var(--border);border-radius:10px;overflow:hidden;opacity:0;animation:fadeUp .8s .9s forwards;z-index:2;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.hap-bar{background:var(--ink2);border-bottom:1px solid var(--border);padding:8px 12px;display:flex;gap:6px;align-items:center}
+.hap-dot{width:7px;height:7px;border-radius:50%}
+.hap-url{font-family:var(--font-mono);font-size:9px;color:var(--faint);margin-left:4px}
+.hap-body{display:grid;grid-template-columns:70px 1fr;height:200px}
+.hap-sidebar{background:var(--ink3);border-right:1px solid var(--border);padding:8px 0}
+.hap-logo{padding:6px 10px 8px;border-bottom:1px solid var(--border);margin-bottom:4px;font-family:var(--font-head);font-size:11px;font-weight:800;letter-spacing:.2em;color:var(--white)}
+.hap-tenant{font-family:var(--font-mono);font-size:6px;color:var(--faint);letter-spacing:.06em}
+.hap-nav{padding:5px 10px;font-family:var(--font-mono);font-size:7.5px;color:var(--faint);display:flex;align-items:center;gap:5px;border-left:2px solid transparent}
+.hap-nav.active{color:var(--blue-hi);border-left-color:var(--blue);background:rgba(37,99,235,.08)}
+.hap-main{padding:10px;display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.hap-title{font-family:var(--font-head);font-size:11px;font-weight:700;color:var(--white)}
+.hap-sub{font-family:var(--font-mono);font-size:6.5px;color:var(--faint)}
+.hap-kpis{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.hap-kpi{background:var(--ink2);border:1px solid var(--border);border-radius:4px;padding:5px 6px}
+.hap-kpi-val{font-family:var(--font-head);font-size:13px;font-weight:800;line-height:1}
+.hap-kpi-lbl{font-family:var(--font-mono);font-size:5.5px;color:var(--faint);margin-top:2px;letter-spacing:.06em;text-transform:uppercase}
+.hap-row{font-size:7px;color:var(--muted);padding:3px 0;border-bottom:1px solid rgba(255,255,255,.03);display:flex;justify-content:space-between}
+.hap-pill{font-family:var(--font-mono);font-size:6px;padding:1px 5px;border-radius:3px;font-weight:500}
+.hap-g{background:rgba(5,150,105,.2);color:var(--green-hi)}
+.hap-a{background:rgba(245,158,11,.18);color:var(--amber-hi)}
+.hap-b{background:rgba(37,99,235,.22);color:var(--blue-hi)}
+.hap-r{background:rgba(220,38,38,.18);color:#FC8181}
 
-  --white:    #F8F8F6;   /* off-white text */
-  --muted:    rgba(248,248,246,0.45);  /* secondary text */
-  --faint:    rgba(248,248,246,0.20);  /* very faint text */
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:6px;font-family:var(--font-body);font-size:13px;font-weight:500;letter-spacing:.02em;text-decoration:none;transition:all .2s;border:none;cursor:pointer}
+.btn-primary{background:var(--blue);color:var(--white)}
+.btn-primary:hover{background:var(--blue-hi);transform:translateY(-1px)}
+.btn-ghost{border:1px solid var(--border2);color:var(--muted);background:transparent}
+.btn-ghost:hover{border-color:rgba(255,255,255,.25);color:var(--white);transform:translateY(-1px)}
 
-  /* Typography */
-  --font-head: 'Outfit', sans-serif;
-  --font-body: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-}
+/* ── MARQUEE ── */
+.marquee-wrap{background:var(--ink2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);height:38px;overflow:hidden;display:flex;align-items:center}
+.marquee-track{display:flex;animation:marquee 30s linear infinite;white-space:nowrap}
+.marquee-item{font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:var(--faint);text-transform:uppercase;padding:0 28px;display:flex;align-items:center;gap:10px}
+.marquee-dot{width:3px;height:3px;background:var(--amber);border-radius:50%;flex-shrink:0}
 
-/* ── BASE ─────────────────────────────────────────────────────────────────── */
-html { overflow-x: hidden; scroll-behavior: smooth; }
+/* ── SHARED SECTION ── */
+.eyebrow{font-family:var(--font-mono);font-size:10px;letter-spacing:.18em;color:var(--amber-hi);text-transform:uppercase;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.eyebrow::before{content:'';display:block;width:18px;height:1px;background:var(--amber-hi)}
+.section-title{font-family:var(--font-head);font-size:clamp(28px,3.5vw,44px);font-weight:700;line-height:1.1;letter-spacing:-.02em;color:var(--white)}
+.section-title em{font-style:normal;color:var(--blue-hi)}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .65s ease,transform .65s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
 
-body {
-  background: var(--ink);
-  color: var(--white);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.6;
-  overflow-x: hidden;
-  cursor: none; /* custom cursor active */
-}
+/* ── INTRO ── */
+#intro{padding:96px 48px;max-width:1000px;margin:0 auto}
+.intro-text{font-family:var(--font-head);font-size:clamp(20px,2.4vw,30px);font-weight:500;line-height:1.5;color:var(--muted);max-width:780px}
+.intro-text b{color:var(--white);font-weight:600}
+.intro-text span{color:var(--blue-hi)}
 
-/* ── CUSTOM CURSOR ────────────────────────────────────────────────────────── */
-/* Small dot that follows mouse exactly */
-#cur-dot {
-  position: fixed;
-  width: 6px; height: 6px;
-  background: var(--amber-hi);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate(-50%, -50%);
-  transition: width .15s, height .15s;
-}
-/* Larger ring that lags slightly behind */
-#cur-ring {
-  position: fixed;
-  width: 26px; height: 26px;
-  border: 1px solid rgba(252,211,77,.3);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  transform: translate(-50%, -50%);
-  transition: width .2s, height .2s, border-color .2s;
-}
+/* ── WHO WE ARE ── */
+#who{background:var(--ink2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:96px 48px}
+.who-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.acronym-list{margin-top:28px}
+.acr-row{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--border);align-items:flex-start}
+.acr-row:first-child{border-top:1px solid var(--border)}
+.acr-letter{font-family:var(--font-head);font-size:32px;font-weight:800;color:var(--blue-hi);width:40px;flex-shrink:0;line-height:1;padding-top:2px}
+.acr-word{font-family:var(--font-head);font-size:15px;font-weight:600;color:var(--white);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.acr-desc{font-size:13px;font-weight:400;color:var(--muted);line-height:1.55}
+.founder-quote{font-family:var(--font-head);font-size:clamp(17px,2vw,22px);font-weight:500;color:var(--white);line-height:1.45;padding-left:20px;border-left:2px solid var(--amber-hi);margin-bottom:14px}
+.founder-attr{font-family:var(--font-mono);font-size:10px;color:var(--faint);letter-spacing:.07em;margin-bottom:24px}
+.body-text{font-size:15px;font-weight:400;color:var(--muted);line-height:1.8;margin-top:16px}
 
-/* ── NAVIGATION ───────────────────────────────────────────────────────────── */
-/* Fixed top bar — transparent until user scrolls */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  height: 58px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  transition: background .35s, border-color .35s;
-  border-bottom: 1px solid transparent;
-}
-/* Scrolled state — darkens and blurs */
-nav.scrolled {
-  background: rgba(9,9,11,.92);
-  backdrop-filter: blur(16px);
-  border-color: var(--border);
-}
-.nav-logo {
-  font-family: var(--font-head);
-  font-size: 17px;
-  font-weight: 800;
-  letter-spacing: .3em;
-  color: var(--white);
-  text-decoration: none;
-}
-.nav-logo span { color: var(--amber-hi); }
+/* ── STORY PANELS ── */
+#story{padding:0;border-top:1px solid var(--border)}
+.story-panel{max-width:1160px;margin:0 auto;padding:72px 48px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;border-bottom:1px solid var(--border)}
+.story-panel:last-child{border-bottom:none}
+.panel-num{font-family:var(--font-head);font-size:clamp(64px,9vw,110px);font-weight:800;color:var(--ink4);line-height:1;letter-spacing:-.04em;margin-bottom:-8px}
+.panel-title{font-family:var(--font-head);font-size:clamp(22px,2.8vw,34px);font-weight:700;color:var(--white);line-height:1.15;margin-bottom:14px;letter-spacing:-.01em}
+.panel-title i{font-style:normal;color:var(--blue-hi)}
+.panel-body{font-size:15px;font-weight:400;color:var(--muted);line-height:1.8;max-width:420px}
 
-/* Tab-style nav links */
-.nav-links {
-  display: flex;
-  gap: 4px;
-  list-style: none;
-  align-items: center;
-}
-.nav-links a {
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--muted);
-  text-decoration: none;
-  padding: 6px 14px;
-  border-radius: 6px;
-  transition: background .2s, color .2s;
-  letter-spacing: .01em;
-}
-.nav-links a:hover {
-  background: var(--ink3);
-  color: var(--white);
-}
-/* Primary CTA button in nav */
-.nav-cta {
-  background: var(--blue) !important;
-  color: var(--white) !important;
-  margin-left: 8px;
-}
-.nav-cta:hover {
-  background: var(--blue-hi) !important;
-  color: var(--white) !important;
-}
+/* ── UI CARDS (in story panels) ── */
+.ui-card{background:var(--ink3);border:1px solid var(--border);border-radius:10px;padding:20px;font-family:var(--font-mono);width:100%;max-width:380px}
+.ui-card-head{font-family:var(--font-head);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.live-badge{display:flex;align-items:center;gap:5px;font-size:9px;color:var(--green-hi)}
+.live-dot{width:5px;height:5px;background:var(--green-hi);border-radius:50%;animation:pulse 2s infinite}
+.ui-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.03);font-size:10.5px;color:var(--faint)}
+.ui-row:last-child{border:none}
+.ui-val{color:var(--white);font-weight:500}
+.ui-val.g{color:var(--green-hi)}
+.ui-val.a{color:var(--amber-hi)}
+.ui-val.b{color:var(--blue-hi)}
+.ui-val.r{color:#FC8181}
+.pill{display:inline-block;padding:2px 7px;border-radius:4px;font-family:var(--font-mono);font-size:8.5px;font-weight:500;letter-spacing:.05em;text-transform:uppercase}
+.pill-g{background:rgba(5,150,105,.2);color:var(--green-hi)}
+.pill-a{background:rgba(245,158,11,.18);color:var(--amber-hi)}
+.pill-b{background:rgba(37,99,235,.22);color:var(--blue-hi)}
+.pill-r{background:rgba(220,38,38,.18);color:#FC8181}
 
-/* ── HERO SECTION ─────────────────────────────────────────────────────────── */
-#hero {
-  height: 100vh;
-  min-height: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  padding: 0 24px;
-}
+/* ── APP PREVIEW ── */
+#platform{padding:0 0 80px;max-width:1240px;margin:0 auto}
+.platform-head{text-align:center;padding:90px 48px 52px}
+.app-frame{margin:0 48px;background:var(--ink2);border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.app-chrome{height:32px;background:var(--ink3);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 14px;gap:7px}
+.chrome-dot{width:9px;height:9px;border-radius:50%}
+.chrome-url{flex:1;text-align:center;font-family:var(--font-mono);font-size:10px;color:var(--faint)}
+.app-body{display:grid;grid-template-columns:190px 1fr;height:400px}
+.app-sidebar{background:var(--ink3);border-right:1px solid var(--border);padding:12px 0}
+.app-logo-area{padding:8px 14px 14px;border-bottom:1px solid var(--border);margin-bottom:6px}
+.app-logo-text{font-family:var(--font-head);font-size:14px;font-weight:800;letter-spacing:.28em;color:var(--white)}
+.app-tenant{font-family:var(--font-mono);font-size:7.5px;color:var(--faint);letter-spacing:.07em;margin-top:2px}
+.app-nav-item{padding:8px 14px;font-family:var(--font-mono);font-size:10px;color:var(--faint);display:flex;align-items:center;gap:8px;border-left:2px solid transparent;transition:all .15s;cursor:pointer}
+.app-nav-item:hover{color:var(--white);background:var(--ink4)}
+.app-nav-item.active{color:var(--blue-hi);border-left-color:var(--blue);background:rgba(37,99,235,.08)}
+.app-main{padding:20px;overflow:hidden;display:flex;flex-direction:column;gap:14px}
+.app-page-title{font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--white)}
+.app-page-sub{font-family:var(--font-mono);font-size:8.5px;color:var(--faint)}
+.app-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.app-kpi{background:var(--ink3);border:1px solid var(--border);border-radius:5px;padding:11px}
+.app-kpi-val{font-family:var(--font-head);font-size:20px;font-weight:800;line-height:1}
+.app-kpi-lbl{font-family:var(--font-mono);font-size:7.5px;color:var(--faint);margin-top:4px;letter-spacing:.07em;text-transform:uppercase}
+.app-table-head{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:6px;padding:6px 10px;font-family:var(--font-mono);font-size:7.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.07em;border-bottom:1px solid var(--border)}
+.app-table-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:6px;padding:8px 10px;font-size:11px;color:var(--muted);border-bottom:1px solid rgba(255,255,255,.025);align-items:center;transition:background .15s;cursor:default}
+.app-table-row:hover{background:var(--ink4)}
 
-/* Subtle grid background — parallax on scroll */
-.hero-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-  background-size: 52px 52px;
-  transform: perspective(800px) rotateX(20deg) scale(1.35);
-  transform-origin: 50% 100%;
-  will-change: transform;
-}
+/* ── FEATURES ── */
+#features{background:var(--ink2);border-top:1px solid var(--border);padding:90px 48px}
+.features-inner{max-width:1160px;margin:0 auto}
+.features-header{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:end;margin-bottom:48px}
+.features-intro{font-size:15px;font-weight:400;color:var(--muted);line-height:1.8;max-width:400px}
+.features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border)}
+.feature-card{background:var(--ink2);padding:28px 26px;position:relative;overflow:hidden;transition:background .25s}
+.feature-card:hover{background:var(--ink3)}
+.feature-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,var(--blue),transparent);transform:scaleX(0);transform-origin:left;transition:transform .4s ease}
+.feature-card:hover::after{transform:scaleX(1)}
+.feature-num{position:absolute;top:22px;right:22px;font-family:var(--font-mono);font-size:9px;color:var(--ink4)}
+.feature-icon{font-size:20px;margin-bottom:14px;display:block}
+.feature-name{font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--white);margin-bottom:8px}
+.feature-desc{font-size:13.5px;font-weight:400;color:var(--muted);line-height:1.75}
 
-/* Blue glow at bottom of hero */
-.hero-glow {
-  position: absolute;
-  bottom: -80px; left: 50%;
-  transform: translateX(-50%);
-  width: 800px; height: 400px;
-  background: radial-gradient(ellipse at 50% 80%, rgba(37,99,235,.18) 0%, transparent 65%);
-  pointer-events: none;
-}
+/* ── HOW IT CONNECTS (replaces moat) ── */
+#connects{border-top:1px solid var(--border);padding:90px 48px}
+.connects-inner{max-width:1160px;margin:0 auto}
+.connects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--border);margin-top:48px}
+.connect-card{background:var(--ink);padding:26px 24px;transition:background .25s}
+.connect-card:hover{background:var(--ink2)}
+.connect-icon{width:32px;height:32px;background:var(--blue-lo);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:14px}
+.connect-title{font-family:var(--font-head);font-size:15px;font-weight:700;color:var(--white);margin-bottom:7px}
+.connect-body{font-size:13px;font-weight:400;color:var(--muted);line-height:1.7}
 
-/* Small label above the main headline */
-.hero-label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: .18em;
-  color: var(--amber-hi);
-  text-transform: uppercase;
-  position: relative;
-  z-index: 2;
-  opacity: 0;
-  animation: fadeUp .6s .2s forwards;
-  margin-bottom: 20px;
-}
+/* ── DEPLOYMENT ── */
+#deploy{background:var(--ink2);border-top:1px solid var(--border);padding:90px 48px}
+.deploy-inner{max-width:1160px;margin:0 auto}
+.deploy-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:48px}
+.deploy-card{background:var(--ink);border:1px solid var(--border);border-radius:8px;padding:28px;transition:border-color .25s}
+.deploy-card:hover{border-color:var(--border2)}
+.deploy-card.highlight{border-color:rgba(37,99,235,.4);background:rgba(37,99,235,.04)}
+.deploy-badge{display:inline-block;font-family:var(--font-mono);font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:3px;margin-bottom:14px}
+.badge-blue{background:var(--blue-lo);color:var(--blue-hi)}
+.badge-amber{background:var(--amber-lo);color:var(--amber-hi)}
+.deploy-title{font-family:var(--font-head);font-size:19px;font-weight:700;color:var(--white);margin-bottom:8px}
+.deploy-body{font-size:14px;font-weight:400;color:var(--muted);line-height:1.75;margin-bottom:18px}
+.deploy-list{display:flex;flex-direction:column;gap:7px}
+.deploy-item{font-size:13px;font-weight:400;color:var(--muted);display:flex;gap:9px;align-items:flex-start;line-height:1.5}
+.deploy-item::before{content:'→';color:var(--blue-hi);flex-shrink:0;margin-top:1px}
 
-/* Main hero headline */
-.hero-h1 {
-  font-family: var(--font-head);
-  font-size: clamp(36px, 4.5vw, 64px);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -.02em;
-  color: var(--white);
-  position: relative;
-  z-index: 2;
-  opacity: 0;
-  animation: fadeUp .7s .35s forwards;
-  max-width: 640px;
-}
-.hero-h1 em {
-  font-style: normal;
-  color: var(--blue-hi);
-}
+/* ── EXPANSION ── */
+#expansion{border-top:1px solid var(--border);padding:90px 48px}
+.expansion-inner{max-width:1160px;margin:0 auto}
+.expansion-track{display:flex;gap:2px;background:var(--border);margin-top:48px}
+.exp-cell{flex:1;background:var(--ink);padding:32px 22px;text-align:center;transition:background .25s}
+.exp-cell:hover{background:var(--ink2)}
+.exp-phase{font-family:var(--font-mono);font-size:9.5px;color:var(--blue-hi);letter-spacing:.1em;margin-bottom:8px}
+.exp-name{font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--white);margin-bottom:7px}
+.exp-desc{font-size:12.5px;font-weight:400;color:var(--muted);line-height:1.65}
+.exp-arrow{display:flex;align-items:center;justify-content:center;width:24px;flex-shrink:0;background:var(--ink3);color:var(--faint);font-size:12px}
 
-/* Subtitle under headline */
-.hero-sub {
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--muted);
-  max-width: 440px;
-  line-height: 1.7;
-  position: relative;
-  z-index: 2;
-  opacity: 0;
-  animation: fadeUp .7s .5s forwards;
-  margin-top: 18px;
-}
+/* ── CTA ── */
+#cta{background:var(--ink2);border-top:1px solid var(--border);padding:110px 48px;text-align:center;position:relative;overflow:hidden}
+.cta-glow{position:absolute;bottom:-160px;left:50%;transform:translateX(-50%);width:600px;height:400px;background:radial-gradient(ellipse,rgba(37,99,235,.16) 0%,transparent 65%);pointer-events:none}
+.cta-title{font-family:var(--font-head);font-size:clamp(32px,4.5vw,56px);font-weight:700;line-height:1.1;letter-spacing:-.02em;color:var(--white);margin-bottom:18px;position:relative;z-index:1}
+.cta-title em{font-style:normal;color:var(--blue-hi)}
+.cta-sub{font-size:15px;font-weight:400;color:var(--muted);max-width:420px;margin:0 auto 36px;line-height:1.75;position:relative;z-index:1}
+.cta-actions{display:flex;justify-content:center;gap:12px;position:relative;z-index:1}
 
-/* CTA buttons */
-.hero-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 32px;
-  position: relative;
-  z-index: 2;
-  opacity: 0;
-  animation: fadeUp .7s .65s forwards;
-}
+/* ── FOOTER ── */
+footer{background:var(--ink);border-top:1px solid var(--border);padding:52px 48px 32px}
+.footer-inner{max-width:1160px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:40px}
+.footer-brand{font-family:var(--font-head);font-size:20px;font-weight:800;letter-spacing:.28em;color:var(--white);margin-bottom:10px}
+.footer-brand span{color:var(--amber-hi)}
+.footer-tagline{font-size:13px;font-weight:400;color:var(--faint);line-height:1.7;max-width:250px}
+.footer-col-title{font-family:var(--font-mono);font-size:9px;letter-spacing:.14em;color:var(--amber-hi);text-transform:uppercase;margin-bottom:12px}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:8px}
+.footer-links a{font-size:13px;font-weight:400;color:var(--faint);text-decoration:none;transition:color .2s}
+.footer-links a:hover{color:var(--white)}
+.footer-bottom{max-width:1160px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;padding-top:20px;border-top:1px solid var(--border)}
+.footer-copy{font-family:var(--font-mono);font-size:9.5px;color:var(--faint)}
 
-/* Scroll indicator at bottom of hero */
-.hero-scroll {
-  position: absolute;
-  bottom: 32px; left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  z-index: 2;
-  opacity: 0;
-  animation: fadeUp .8s 1.1s forwards;
-}
-.hero-scroll span {
-  font-family: var(--font-mono);
-  font-size: 9px;
-  letter-spacing: .14em;
-  color: var(--faint);
-  text-transform: uppercase;
-}
-.scroll-line {
-  width: 1px; height: 40px;
-  background: linear-gradient(var(--amber-hi), transparent);
-  animation: scrollPulse 2s ease-in-out infinite;
-}
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes scrollPulse{0%,100%{opacity:.4;transform:scaleY(1)}50%{opacity:1;transform:scaleY(1.15)}}
 
-/* ── BUTTONS ──────────────────────────────────────────────────────────────── */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 11px 24px;
-  border-radius: 6px;
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 500;
-  letter-spacing: .02em;
-  text-decoration: none;
-  transition: all .2s;
-  border: none;
-  cursor: pointer;
-}
-.btn-primary {
-  background: var(--blue);
-  color: var(--white);
-}
-.btn-primary:hover { background: var(--blue-hi); transform: translateY(-1px); }
-
-.btn-ghost {
-  border: 1px solid var(--border2);
-  color: var(--muted);
-  background: transparent;
-}
-.btn-ghost:hover { border-color: rgba(255,255,255,.25); color: var(--white); transform: translateY(-1px); }
-
-/* ── SCROLLING MARQUEE BAR ────────────────────────────────────────────────── */
-.marquee-wrap {
-  background: var(--ink2);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  height: 38px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-/* Inner track animates continuously left */
-.marquee-track {
-  display: flex;
-  animation: marquee 30s linear infinite;
-  white-space: nowrap;
-}
-.marquee-item {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: .1em;
-  color: var(--faint);
-  text-transform: uppercase;
-  padding: 0 28px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-/* Small amber dot separator between items */
-.marquee-dot {
-  width: 3px; height: 3px;
-  background: var(--amber);
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-/* ── SHARED SECTION UTILITIES ─────────────────────────────────────────────── */
-/* Small eyebrow label above section titles */
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  letter-spacing: .18em;
-  color: var(--amber-hi);
-  text-transform: uppercase;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-.eyebrow::before {
-  content: '';
-  display: block;
-  width: 18px; height: 1px;
-  background: var(--amber-hi);
-}
-
-/* Section headline */
-.section-title {
-  font-family: var(--font-head);
-  font-size: clamp(28px, 3.5vw, 44px);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -.02em;
-  color: var(--white);
-}
-.section-title em { font-style: normal; color: var(--blue-hi); }
-.section-title s  { text-decoration: none; color: var(--amber-hi); }
-
-/* Scroll-reveal animation — elements start hidden, become visible */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity .65s ease, transform .65s ease;
-}
-.reveal.visible { opacity: 1; transform: translateY(0); }
-
-/* Section outer padding */
-.section-pad {
-  padding: 96px 48px;
-}
-
-/* ── INTRO STATEMENT ──────────────────────────────────────────────────────── */
-/* Large bold statement paragraph below hero */
-#intro {
-  padding: 96px 48px;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-.intro-text {
-  font-family: var(--font-head);
-  font-size: clamp(20px, 2.4vw, 30px);
-  font-weight: 500;
-  line-height: 1.5;
-  color: var(--muted);
-  max-width: 780px;
-}
-.intro-text b { color: var(--white); font-weight: 600; }
-.intro-text span { color: var(--blue-hi); }
-
-/* ── WHO WE ARE ───────────────────────────────────────────────────────────── */
-#who {
-  background: var(--ink2);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 96px 48px;
-}
-.who-inner {
-  max-width: 1160px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: start;
-}
-
-/* POLLY acronym breakdown rows */
-.acronym-list { margin-top: 28px; }
-.acr-row {
-  display: flex;
-  gap: 16px;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
-  align-items: flex-start;
-}
-.acr-row:first-child { border-top: 1px solid var(--border); }
-.acr-letter {
-  font-family: var(--font-head);
-  font-size: 32px;
-  font-weight: 800;
-  color: var(--blue-hi);
-  width: 40px;
-  flex-shrink: 0;
-  line-height: 1;
-  padding-top: 2px;
-}
-.acr-word {
-  font-family: var(--font-head);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--white);
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  margin-bottom: 3px;
-}
-.acr-desc {
-  font-size: 13px;
-  font-weight: 400;
-  color: var(--muted);
-  line-height: 1.55;
-}
-
-/* Founder quote with left border */
-.founder-quote {
-  font-family: var(--font-head);
-  font-size: clamp(17px, 2vw, 22px);
-  font-weight: 500;
-  color: var(--white);
-  line-height: 1.45;
-  padding-left: 20px;
-  border-left: 2px solid var(--amber-hi);
-  margin-bottom: 14px;
-}
-.founder-attr {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--faint);
-  letter-spacing: .07em;
-  margin-bottom: 24px;
-}
-.body-text {
-  font-size: 15px;
-  font-weight: 400;
-  color: var(--muted);
-  line-height: 1.8;
-  margin-top: 16px;
-}
-
-/* ── HOW IT WORKS — VERTICAL PANELS ──────────────────────────────────────── */
-/* Each panel = one feature, left text + right visual card */
-#story {
-  padding: 0;
-  border-top: 1px solid var(--border);
-}
-.story-panel {
-  max-width: 1160px;
-  margin: 0 auto;
-  padding: 72px 48px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 80px;
-  align-items: center;
-  border-bottom: 1px solid var(--border);
-}
-.story-panel:last-child { border-bottom: none; }
-
-/* Large background number (01, 02 etc) */
-.panel-num {
-  font-family: var(--font-head);
-  font-size: clamp(64px, 9vw, 110px);
-  font-weight: 800;
-  color: var(--ink4);
-  line-height: 1;
-  letter-spacing: -.04em;
-  margin-bottom: -8px;
-}
-.panel-title {
-  font-family: var(--font-head);
-  font-size: clamp(22px, 2.8vw, 34px);
-  font-weight: 700;
-  color: var(--white);
-  line-height: 1.15;
-  margin-bottom: 14px;
-  letter-spacing: -.01em;
-}
-.panel-title i  { font-style: normal; color: var(--blue-hi); }
-.panel-title s  { text-decoration: none; color: var(--amber-hi); }
-.panel-body {
-  font-size: 15px;
-  font-weight: 400;
-  color: var(--muted);
-  line-height: 1.8;
-  max-width: 420px;
-}
-
-/* ── UI PREVIEW CARDS (used inside story panels) ──────────────────────────── */
-/* Fake dashboard card to illustrate features */
-.ui-card {
-  background: var(--ink3);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 20px;
-  font-family: var(--font-mono);
-  width: 100%;
-  max-width: 380px;
-}
-.ui-card-head {
-  font-family: var(--font-head);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--faint);
-  margin-bottom: 14px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-/* Live indicator dot */
-.live-badge {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 9px;
-  color: var(--green-hi);
-}
-.live-dot {
-  width: 5px; height: 5px;
-  background: var(--green-hi);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-/* Data row inside UI cards */
-.ui-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 7px 0;
-  border-bottom: 1px solid rgba(255,255,255,.03);
-  font-size: 10.5px;
-  color: var(--faint);
-}
-.ui-row:last-child { border: none; }
-.ui-val { color: var(--white); font-weight: 500; }
-.ui-val.g { color: var(--green-hi); }
-.ui-val.a { color: var(--amber-hi); }
-.ui-val.b { color: var(--blue-hi); }
-.ui-val.r { color: #FC8181; }
-
-/* Status pills */
-.pill {
-  display: inline-block;
-  padding: 2px 7px;
-  border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 8.5px;
-  font-weight: 500;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-}
-.pill-g { background: rgba(5,150,105,.2);  color: var(--green-hi); }
-.pill-a { background: rgba(245,158,11,.18); color: var(--amber-hi); }
-.pill-b { background: rgba(37,99,235,.22);  color: var(--blue-hi); }
-.pill-r { background: rgba(220,38,38,.18);  color: #FC8181; }
-
-/* ── APP PREVIEW SCREENSHOT ───────────────────────────────────────────────── */
-#platform {
-  padding: 0 0 80px;
-  max-width: 1240px;
-  margin: 0 auto;
-}
-.platform-head {
-  text-align: center;
-  padding: 90px 48px 52px;
-}
-/* Fake browser/app frame */
-.app-frame {
-  margin: 0 48px;
-  background: var(--ink2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-}
-/* Browser chrome top bar */
-.app-chrome {
-  height: 32px;
-  background: var(--ink3);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  padding: 0 14px;
-  gap: 7px;
-}
-.chrome-dot { width: 9px; height: 9px; border-radius: 50%; }
-.chrome-url {
-  flex: 1;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--faint);
-}
-/* App body: sidebar + main */
-.app-body {
-  display: grid;
-  grid-template-columns: 190px 1fr;
-  height: 400px;
-}
-/* Left sidebar */
-.app-sidebar {
-  background: var(--ink3);
-  border-right: 1px solid var(--border);
-  padding: 12px 0;
-}
-.app-logo-area {
-  padding: 8px 14px 14px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 6px;
-}
-.app-logo-text {
-  font-family: var(--font-head);
-  font-size: 14px;
-  font-weight: 800;
-  letter-spacing: .28em;
-  color: var(--white);
-}
-.app-tenant {
-  font-family: var(--font-mono);
-  font-size: 7.5px;
-  color: var(--faint);
-  letter-spacing: .07em;
-  margin-top: 2px;
-}
-.app-nav-item {
-  padding: 8px 14px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--faint);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  border-left: 2px solid transparent;
-  transition: all .15s;
-  cursor: pointer;
-}
-.app-nav-item:hover { color: var(--white); background: var(--ink4); }
-.app-nav-item.active {
-  color: var(--blue-hi);
-  border-left-color: var(--blue);
-  background: rgba(37,99,235,.08);
-}
-/* Main content area */
-.app-main { padding: 20px; overflow: hidden; display: flex; flex-direction: column; gap: 14px; }
-.app-page-title { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--white); }
-.app-page-sub   { font-family: var(--font-mono); font-size: 8.5px; color: var(--faint); }
-/* KPI strip */
-.app-kpis { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
-.app-kpi  { background: var(--ink3); border: 1px solid var(--border); border-radius: 5px; padding: 11px; }
-.app-kpi-val { font-family: var(--font-head); font-size: 20px; font-weight: 800; line-height: 1; }
-.app-kpi-lbl { font-family: var(--font-mono); font-size: 7.5px; color: var(--faint); margin-top: 4px; letter-spacing: .07em; text-transform: uppercase; }
-/* Orders table */
-.app-table-head {
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 6px; padding: 6px 10px;
-  font-family: var(--font-mono); font-size: 7.5px;
-  color: var(--faint); text-transform: uppercase; letter-spacing: .07em;
-  border-bottom: 1px solid var(--border);
-}
-.app-table-row {
-  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 6px; padding: 8px 10px;
-  font-size: 11px; color: var(--muted);
-  border-bottom: 1px solid rgba(255,255,255,.025);
-  align-items: center; transition: background .15s; cursor: default;
-}
-.app-table-row:hover { background: var(--ink4); }
-
-/* ── FEATURES GRID ────────────────────────────────────────────────────────── */
-#features {
-  background: var(--ink2);
-  border-top: 1px solid var(--border);
-  padding: 90px 48px;
-}
-.features-inner { max-width: 1160px; margin: 0 auto; }
-.features-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: end;
-  margin-bottom: 48px;
-}
-.features-intro {
-  font-size: 15px;
-  font-weight: 400;
-  color: var(--muted);
-  line-height: 1.8;
-  max-width: 400px;
-}
-/* 3-column feature card grid */
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 2px;
-  background: var(--border);
-}
-.feature-card {
-  background: var(--ink2);
-  padding: 28px 26px;
-  position: relative;
-  overflow: hidden;
-  transition: background .25s;
-}
-.feature-card:hover { background: var(--ink3); }
-/* Animated underline on hover */
-.feature-card::after {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0;
-  height: 1.5px;
-  background: linear-gradient(90deg, var(--blue), transparent);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform .4s ease;
-}
-.feature-card:hover::after { transform: scaleX(1); }
-.feature-num  { position: absolute; top: 22px; right: 22px; font-family: var(--font-mono); font-size: 9px; color: var(--ink4); }
-.feature-icon { font-size: 20px; margin-bottom: 14px; display: block; }
-.feature-name { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-.feature-desc { font-size: 13.5px; font-weight: 400; color: var(--muted); line-height: 1.75; }
-
-/* ── DEFENSIBILITY / MOAT ─────────────────────────────────────────────────── */
-#moat {
-  border-top: 1px solid var(--border);
-  padding: 90px 48px;
-}
-.moat-inner { max-width: 1160px; margin: 0 auto; }
-.moat-grid {
-  display: grid;
-  grid-template-columns: repeat(3,1fr);
-  gap: 2px;
-  background: var(--border);
-  margin-top: 48px;
-}
-.moat-card { background: var(--ink); padding: 26px 24px; transition: background .25s; }
-.moat-card:hover { background: var(--ink2); }
-.moat-icon  { width: 32px; height: 32px; background: var(--blue-lo); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 15px; margin-bottom: 14px; }
-.moat-title { font-family: var(--font-head); font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 7px; }
-.moat-body  { font-size: 13px; font-weight: 400; color: var(--muted); line-height: 1.7; }
-
-/* ── DEPLOYMENT OPTIONS ───────────────────────────────────────────────────── */
-#deploy {
-  background: var(--ink2);
-  border-top: 1px solid var(--border);
-  padding: 90px 48px;
-}
-.deploy-inner { max-width: 1160px; margin: 0 auto; }
-.deploy-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; }
-.deploy-card  { background: var(--ink); border: 1px solid var(--border); border-radius: 8px; padding: 28px; transition: border-color .25s; }
-.deploy-card:hover { border-color: var(--border2); }
-/* Highlighted card for key differentiator */
-.deploy-card.highlight { border-color: rgba(37,99,235,.4); background: rgba(37,99,235,.04); }
-.deploy-badge {
-  display: inline-block;
-  font-family: var(--font-mono);
-  font-size: 8.5px; letter-spacing: .1em; text-transform: uppercase;
-  padding: 3px 8px; border-radius: 3px; margin-bottom: 14px;
-}
-.badge-blue   { background: var(--blue-lo);  color: var(--blue-hi); }
-.badge-amber  { background: var(--amber-lo); color: var(--amber-hi); }
-.deploy-title { font-family: var(--font-head); font-size: 19px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
-.deploy-body  { font-size: 14px; font-weight: 400; color: var(--muted); line-height: 1.75; margin-bottom: 18px; }
-.deploy-list  { display: flex; flex-direction: column; gap: 7px; }
-.deploy-item  {
-  font-size: 13px; font-weight: 400; color: var(--muted);
-  display: flex; gap: 9px; align-items: flex-start; line-height: 1.5;
-}
-.deploy-item::before { content: '→'; color: var(--blue-hi); flex-shrink: 0; margin-top: 1px; }
-
-/* ── EXPANSION / VISION ───────────────────────────────────────────────────── */
-#expansion {
-  border-top: 1px solid var(--border);
-  padding: 90px 48px;
-}
-.expansion-inner { max-width: 1160px; margin: 0 auto; }
-.expansion-track {
-  display: flex;
-  gap: 2px;
-  background: var(--border);
-  margin-top: 48px;
-}
-.exp-cell {
-  flex: 1;
-  background: var(--ink);
-  padding: 32px 22px;
-  text-align: center;
-  transition: background .25s;
-}
-.exp-cell:hover { background: var(--ink2); }
-.exp-phase { font-family: var(--font-mono); font-size: 9.5px; color: var(--blue-hi); letter-spacing: .1em; margin-bottom: 8px; }
-.exp-name  { font-family: var(--font-head); font-size: 16px; font-weight: 700; color: var(--white); margin-bottom: 7px; }
-.exp-desc  { font-size: 12.5px; font-weight: 400; color: var(--muted); line-height: 1.65; }
-/* Arrow between cells */
-.exp-arrow { display: flex; align-items: center; justify-content: center; width: 24px; flex-shrink: 0; background: var(--ink3); color: var(--faint); font-size: 12px; }
-
-/* ── CTA BAND ─────────────────────────────────────────────────────────────── */
-#cta {
-  background: var(--ink2);
-  border-top: 1px solid var(--border);
-  padding: 110px 48px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-/* Subtle blue glow behind CTA */
-.cta-glow {
-  position: absolute;
-  bottom: -160px; left: 50%; transform: translateX(-50%);
-  width: 600px; height: 400px;
-  background: radial-gradient(ellipse, rgba(37,99,235,.16) 0%, transparent 65%);
-  pointer-events: none;
-}
-.cta-title {
-  font-family: var(--font-head);
-  font-size: clamp(32px, 4.5vw, 56px);
-  font-weight: 700;
-  line-height: 1.1;
-  letter-spacing: -.02em;
-  color: var(--white);
-  margin-bottom: 18px;
-  position: relative; z-index: 1;
-}
-.cta-title em { font-style: normal; color: var(--blue-hi); }
-.cta-sub {
-  font-size: 15px;
-  font-weight: 400;
-  color: var(--muted);
-  max-width: 420px;
-  margin: 0 auto 36px;
-  line-height: 1.75;
-  position: relative; z-index: 1;
-}
-.cta-actions { display: flex; justify-content: center; gap: 12px; position: relative; z-index: 1; }
-
-/* ── FOOTER ───────────────────────────────────────────────────────────────── */
-footer {
-  background: var(--ink);
-  border-top: 1px solid var(--border);
-  padding: 52px 48px 32px;
-}
-.footer-inner {
-  max-width: 1160px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 48px;
-  margin-bottom: 40px;
-}
-.footer-brand { font-family: var(--font-head); font-size: 20px; font-weight: 800; letter-spacing: .28em; color: var(--white); margin-bottom: 10px; }
-.footer-brand span { color: var(--amber-hi); }
-.footer-tagline { font-size: 13px; font-weight: 400; color: var(--faint); line-height: 1.7; max-width: 250px; }
-.footer-col-title { font-family: var(--font-mono); font-size: 9px; letter-spacing: .14em; color: var(--amber-hi); text-transform: uppercase; margin-bottom: 12px; }
-.footer-links { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-.footer-links a { font-size: 13px; font-weight: 400; color: var(--faint); text-decoration: none; transition: color .2s; }
-.footer-links a:hover { color: var(--white); }
-.footer-bottom {
-  max-width: 1160px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 20px;
-  border-top: 1px solid var(--border);
-}
-.footer-copy { font-family: var(--font-mono); font-size: 9.5px; color: var(--faint); }
-
-/* ── KEYFRAME ANIMATIONS ──────────────────────────────────────────────────── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: .25; }
-}
-@keyframes scrollPulse {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: .2; transform: scaleY(.5); }
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .hero-app-preview{display:none}
+  .who-inner,.story-panel,.features-header,.deploy-grid{grid-template-columns:1fr;gap:40px}
+  .expansion-track{flex-direction:column}
+  .exp-arrow{width:auto;height:24px;transform:rotate(90deg)}
+  .features-grid,.connects-grid{grid-template-columns:1fr}
+  .footer-inner{grid-template-columns:1fr 1fr}
+  nav{padding:0 20px}
+  #intro,#who,#features,#connects,#deploy,#expansion,#cta{padding:60px 24px}
+  .story-panel{padding:52px 24px}
+  .app-frame,.platform-head{margin:0 24px}
 }
 </style>
 </head>
 <body>
 
-<!-- ── CUSTOM CURSOR ─────────────────────────────────────────────────────── -->
 <div id="cur-dot"></div>
 <div id="cur-ring"></div>
 
-<!-- ── NAVIGATION ────────────────────────────────────────────────────────── -->
+<!-- ── NAVIGATION ── -->
 <nav id="main-nav">
   <a href="#" class="nav-logo">POLL<span>Y</span></a>
   <ul class="nav-links">
-    <li><a href="#who">About</a></li>
     <li><a href="#story">How It Works</a></li>
-    <li><a href="#features">Platform</a></li>
+    <li><a href="#features">Features</a></li>
     <li><a href="#deploy">Deployment</a></li>
-    <li><a href="#cta" class="nav-cta">Request Demo</a></li>
+    <li><a href="#expansion">Vision</a></li>
+    <li><a href="https://app.pollylogistics.com" class="nav-cta">Log In</a></li>
   </ul>
 </nav>
 
-<!-- ── HERO ──────────────────────────────────────────────────────────────── -->
+<!-- ── HERO ── -->
 <section id="hero">
   <div class="hero-grid" id="hero-grid"></div>
   <div class="hero-glow"></div>
 
-  <p class="hero-label">Logistics Intelligence Platform</p>
-
-  <h1 class="hero-h1">
-    The operating system for<br><em>modern carriers.</em>
-  </h1>
-
-  <p class="hero-sub">
-    Route smarter. Dispatch faster. Keep customers stocked.
-    POLLY brings every part of your operation into one platform.
-  </p>
-
+  <div class="hero-label">Precision · Optimization · Logistics · Live Data · Your Fleet</div>
+  <h1 class="hero-h1">Logistics intelligence for<br>carriers who <em>move product.</em></h1>
+  <p class="hero-sub">A unified platform for fleet management, route optimization, and inventory intelligence — built specifically for small to mid-size fuel and lube carriers.</p>
   <div class="hero-actions">
-    <a href="#cta" class="btn btn-primary">Request Early Access</a>
-    <a href="#story" class="btn btn-ghost">See How It Works</a>
+    <a href="mailto:hello@pollylogistics.com" class="btn btn-primary" style="padding:13px 32px">Request a Demo</a>
+    <a href="#story" class="btn btn-ghost" style="padding:13px 32px">See How It Works</a>
+  </div>
+
+  <!-- Mini app preview floating in hero -->
+  <div class="hero-app-preview">
+    <div class="hap-bar">
+      <div class="hap-dot" style="background:#FF5F57"></div>
+      <div class="hap-dot" style="background:#FFBD2E"></div>
+      <div class="hap-dot" style="background:#28C840"></div>
+      <div class="hap-url">app.pollylogistics.com</div>
+    </div>
+    <div class="hap-body">
+      <div class="hap-sidebar">
+        <div class="hap-logo">POLLY<div class="hap-tenant">Bailey's Inc</div></div>
+        <div class="hap-nav active">⊞&nbsp;Dashboard</div>
+        <div class="hap-nav">◉&nbsp;Live Fleet</div>
+        <div class="hap-nav">⊙&nbsp;Fleet Health</div>
+        <div class="hap-nav">◻&nbsp;Contracts</div>
+        <div class="hap-nav">◎&nbsp;Customers</div>
+        <div class="hap-nav">◷&nbsp;Scheduler</div>
+        <div class="hap-nav">≡&nbsp;Orders</div>
+        <div class="hap-nav">⊕&nbsp;Routes</div>
+        <div class="hap-nav">▤&nbsp;Inventory</div>
+        <div class="hap-nav">◈&nbsp;Billing</div>
+        <div class="hap-nav">◇&nbsp;Pricing</div>
+        <div class="hap-nav">▦&nbsp;Reports</div>
+        <div class="hap-nav">⊗&nbsp;Settings</div>
+      </div>
+      <div class="hap-main">
+        <div><div class="hap-title">Dashboard</div><div class="hap-sub">Monday, May 11, 2026 · Bailey's Inc</div></div>
+        <div class="hap-kpis">
+          <div class="hap-kpi"><div class="hap-kpi-val" style="color:var(--blue-hi)">7</div><div class="hap-kpi-lbl">Active Trucks</div></div>
+          <div class="hap-kpi"><div class="hap-kpi-val">23</div><div class="hap-kpi-lbl">Open Orders</div></div>
+          <div class="hap-kpi"><div class="hap-kpi-val" style="color:var(--amber-hi)">3</div><div class="hap-kpi-lbl">Exceptions</div></div>
+          <div class="hap-kpi"><div class="hap-kpi-val" style="color:var(--green-hi)">$14k</div><div class="hap-kpi-lbl">Revenue</div></div>
+        </div>
+        <div class="hap-row"><span>Fort Valley Farm Supply</span><span class="hap-pill hap-g">Delivered</span></div>
+        <div class="hap-row"><span>Macon Industrial Park</span><span class="hap-pill hap-b">In Route</span></div>
+        <div class="hap-row"><span>Perry Fleet Services</span><span class="hap-pill hap-a">Scheduled</span></div>
+        <div class="hap-row"><span>Warner Robins Equip.</span><span class="hap-pill hap-r">Urgent</span></div>
+      </div>
+    </div>
   </div>
 
   <div class="hero-scroll">
     <div class="scroll-line"></div>
-    <span>Scroll to explore</span>
+    <span>Scroll</span>
   </div>
 </section>
 
-<!-- ── SCROLLING MARQUEE BAR ─────────────────────────────────────────────── -->
+<!-- ── MARQUEE ── -->
 <div class="marquee-wrap">
-  <!-- Items duplicated so the loop is seamless -->
   <div class="marquee-track">
     <div class="marquee-item"><div class="marquee-dot"></div>Route Optimization</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Live Fleet GPS</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Live Fleet Tracking</div>
     <div class="marquee-item"><div class="marquee-dot"></div>Tank Monitoring</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Automated Invoicing</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Embedded Integration</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Fleet Health</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>AI-Powered Dispatch</div>
     <div class="marquee-item"><div class="marquee-dot"></div>Order Management</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Customer Portal</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Predictive Alerts</div>
-    <!-- Duplicate for seamless loop -->
+    <div class="marquee-item"><div class="marquee-dot"></div>Fleet Health</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Inventory Intelligence</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Billing &amp; Invoicing</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Contracts</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Scheduler</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Pricing &amp; Quoting</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Reports</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Embedded Integration</div>
+    <!-- duplicate for seamless loop -->
     <div class="marquee-item"><div class="marquee-dot"></div>Route Optimization</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Live Fleet GPS</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Live Fleet Tracking</div>
     <div class="marquee-item"><div class="marquee-dot"></div>Tank Monitoring</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Automated Invoicing</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Embedded Integration</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Fleet Health</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>AI-Powered Dispatch</div>
     <div class="marquee-item"><div class="marquee-dot"></div>Order Management</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Customer Portal</div>
-    <div class="marquee-item"><div class="marquee-dot"></div>Predictive Alerts</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Fleet Health</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Inventory Intelligence</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Billing &amp; Invoicing</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Contracts</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Scheduler</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Pricing &amp; Quoting</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Reports</div>
+    <div class="marquee-item"><div class="marquee-dot"></div>Embedded Integration</div>
   </div>
 </div>
 
-<!-- ── INTRO STATEMENT ───────────────────────────────────────────────────── -->
+<!-- ── INTRO STATEMENT ── -->
 <section id="intro">
   <p class="intro-text reveal">
-    Carriers today juggle <b>disconnected tools, manual processes,</b> and
-    reactive decisions that cost real money every day. Too large to run manually.
-    Too small for bloated enterprise platforms.
-    <span>POLLY was built to close that gap.</span>
+    Small to mid-size carriers operate at full complexity — <b>multiple trucks, multiple customers, multiple products</b> — but without access to the tools that make that complexity manageable.
+    <span>POLLY changes that.</span>
   </p>
 </section>
 
-<!-- ── WHO WE ARE ────────────────────────────────────────────────────────── -->
+<!-- ── WHO WE ARE ── -->
 <section id="who">
   <div class="who-inner">
-
-    <!-- Left: POLLY acronym breakdown -->
     <div>
       <div class="eyebrow reveal">What POLLY Stands For</div>
       <h2 class="section-title reveal" data-d="60">Built from<br>a <em>conviction.</em></h2>
       <div class="acronym-list reveal" data-d="120">
-        <div class="acr-row">
-          <span class="acr-letter">P</span>
-          <div><div class="acr-word">Precision</div><div class="acr-desc">Every route, every load, every decision — modeled with accuracy</div></div>
-        </div>
-        <div class="acr-row">
-          <span class="acr-letter">O</span>
-          <div><div class="acr-word">Optimization</div><div class="acr-desc">Maximum deliveries, minimum miles, zero waste</div></div>
-        </div>
-        <div class="acr-row">
-          <span class="acr-letter">L</span>
-          <div><div class="acr-word">Logistics</div><div class="acr-desc">Purpose-built for the real complexity of carrier operations</div></div>
-        </div>
-        <div class="acr-row">
-          <span class="acr-letter">L</span>
-          <div><div class="acr-word">Live Data</div><div class="acr-desc">Real-time visibility across fleet, inventory, and customers</div></div>
-        </div>
-        <div class="acr-row">
-          <span class="acr-letter">Y</span>
-          <div><div class="acr-word">Your Fleet</div><div class="acr-desc">Not generic software adapted. Built for the way you operate</div></div>
-        </div>
+        <div class="acr-row"><span class="acr-letter">P</span><div><div class="acr-word">Precision</div><div class="acr-desc">Every route, every load, every decision — modeled with accuracy</div></div></div>
+        <div class="acr-row"><span class="acr-letter">O</span><div><div class="acr-word">Optimization</div><div class="acr-desc">Maximum deliveries, minimum miles, zero waste</div></div></div>
+        <div class="acr-row"><span class="acr-letter">L</span><div><div class="acr-word">Logistics</div><div class="acr-desc">Purpose-built for the real complexity of carrier operations</div></div></div>
+        <div class="acr-row"><span class="acr-letter">L</span><div><div class="acr-word">Live Data</div><div class="acr-desc">Real-time visibility across fleet, inventory, and customers</div></div></div>
+        <div class="acr-row"><span class="acr-letter">Y</span><div><div class="acr-word">Your Fleet</div><div class="acr-desc">Not generic software adapted. Built for the way you operate</div></div></div>
       </div>
     </div>
-
-    <!-- Right: mission and vision text -->
     <div>
-      <blockquote class="founder-quote reveal">
-        "The industry deserves better tools than the ones it has been handed. The manual processes, the disconnected systems — the hours spent on tasks that should take minutes."
-      </blockquote>
+      <blockquote class="founder-quote reveal">"The industry deserves better tools than the ones it has been handed. The manual processes, the disconnected systems — the hours spent on tasks that should take minutes."</blockquote>
       <p class="founder-attr reveal" data-d="60">— Alexander Jensen, Founder · Polly Logistics LLC</p>
-      <p class="body-text reveal" data-d="120">
-        We envision a logistics industry where every carrier — regardless of fleet size — has access to the same operational intelligence as the largest players in the world. Where decisions are driven by real-time data, not gut instinct.
-      </p>
-      <p class="body-text reveal" data-d="180" style="color: var(--blue-hi); margin-top: 14px;">
-        POLLY enters through fuel and lube distribution — a vertical we know deeply — with a clear roadmap to the broader carrier market, warehousing, air, and ocean freight.
-      </p>
+      <p class="body-text reveal" data-d="120">We envision a logistics industry where every carrier — regardless of fleet size — has access to the same operational intelligence as the largest players in the world. Where decisions are driven by real-time data, not gut instinct.</p>
+      <p class="body-text reveal" data-d="180" style="color:var(--blue-hi);margin-top:14px">POLLY enters through fuel and lube distribution — a vertical we know deeply — with a clear roadmap to the broader carrier market, warehousing, air, and ocean freight.</p>
     </div>
-
   </div>
 </section>
 
-<!-- ── HOW IT WORKS — 5 VERTICAL PANELS ──────────────────────────────────── -->
+<!-- ── HOW IT WORKS ── -->
 <section id="story">
 
-  <!-- Panel 01: Dispatcher-first design -->
   <div class="story-panel reveal">
     <div>
       <div class="panel-num">01</div>
-      <h3 class="panel-title">Dispatcher-<em>first</em> design.</h3>
-      <p class="panel-body">
-        Every screen in POLLY is built for the person who needs to see what matters and act fast — even when eight trucks are rolling at once. Not designed for IT demos. Designed for dispatch floors.
-      </p>
+      <h3 class="panel-title">Dispatcher-<i>first</i> design.</h3>
+      <p class="panel-body">Every screen in POLLY is built for the person who needs to see what matters and act fast — even when eight trucks are rolling at once. Dashboard, fleet map, exceptions, orders, and inventory all in one place.</p>
     </div>
     <div style="display:flex;align-items:center;justify-content:center">
       <div class="ui-card">
@@ -1079,35 +423,30 @@ footer {
     </div>
   </div>
 
-  <!-- Panel 02: Route optimization -->
   <div class="story-panel reveal" data-d="60">
     <div>
       <div class="panel-num">02</div>
-      <h3 class="panel-title">Route intelligence that <em>actually works.</em></h3>
-      <p class="panel-body">
-        Built on Google OR-Tools and HERE Truck Routing. Multi-constraint solving accounts for bridge weight limits, hazmat restrictions, delivery time windows, offload rates, terminal availability, and live traffic. Not just the shortest path.
-      </p>
+      <h3 class="panel-title">Route optimization that <i>actually works.</i></h3>
+      <p class="panel-body">Built on Google OR-Tools and HERE Truck Routing. Multi-constraint solving accounts for bridge weight limits, HOS windows, offload rates, delivery time windows, terminal availability, and live traffic — not just the shortest path.</p>
     </div>
     <div style="display:flex;align-items:center;justify-content:center">
       <div class="ui-card">
-        <div class="ui-card-head">Route B · Today <div class="live-badge"><div class="live-dot"></div>Optimized</div></div>
-        <div class="ui-row"><span>Truck</span><span class="ui-val">T-7 · Thompson</span></div>
+        <div class="ui-card-head">Route B · Today <div class="live-badge"><div class="live-dot"></div>Active</div></div>
+        <div class="ui-row"><span>Driver</span><span class="ui-val">T-7 · Thompson</span></div>
         <div class="ui-row"><span>Stops completed</span><span class="ui-val b">11 of 12</span></div>
-        <div class="ui-row"><span>Volume delivered</span><span class="ui-val">5,200 gal DEF</span></div>
+        <div class="ui-row"><span>Est. miles</span><span class="ui-val">184 mi</span></div>
+        <div class="ui-row"><span>Drive time</span><span class="ui-val b">3h 20m</span></div>
+        <div class="ui-row"><span>Offload time</span><span class="ui-val a">2h 10m</span></div>
         <div class="ui-row"><span>Est. completion</span><span class="ui-val g">5:48 PM ✓</span></div>
-        <div class="ui-row"><span>Status</span><span class="pill pill-g">On Schedule</span></div>
       </div>
     </div>
   </div>
 
-  <!-- Panel 03: Live inventory -->
   <div class="story-panel reveal" data-d="60">
     <div>
       <div class="panel-num">03</div>
-      <h3 class="panel-title">Live inventory <em>intelligence.</em></h3>
-      <p class="panel-body">
-        POLLY maintains a live inventory ledger tracking four states simultaneously: stock at customer sites, product on trucks in transit, committed inventory for open orders, and available inventory free to assign. No competitor sees all four at once.
-      </p>
+      <h3 class="panel-title">Live inventory <i>intelligence.</i></h3>
+      <p class="panel-body">POLLY maintains a live inventory ledger tracking four states simultaneously: stock at customer sites, product on trucks in transit, committed inventory for open orders, and available inventory free to assign — giving dispatchers a true real-time picture.</p>
     </div>
     <div style="display:flex;align-items:center;justify-content:center">
       <div class="ui-card">
@@ -1116,50 +455,40 @@ footer {
         <div class="ui-row"><span>On trucks (in transit)</span><span class="ui-val a">12,400 gal</span></div>
         <div class="ui-row"><span>Committed to open orders</span><span class="ui-val">19,000 gal</span></div>
         <div class="ui-row"><span>Available to assign</span><span class="ui-val g">31,800 gal</span></div>
-        <div style="margin-top:12px;padding:8px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.18);border-radius:5px;font-size:10px;color:#FC8181">
-          ⚠ 3 customers projected runout within 48 hrs
-        </div>
+        <div style="margin-top:12px;padding:8px;background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.18);border-radius:5px;font-size:10px;color:#FC8181">⚠ 3 customers projected runout within 48 hrs</div>
       </div>
     </div>
   </div>
 
-  <!-- Panel 04: Embedded integration -->
   <div class="story-panel reveal" data-d="60">
     <div>
       <div class="panel-num">04</div>
-      <h3 class="panel-title">Embedded anywhere. <em>Disrupts nothing.</em></h3>
-      <p class="panel-body">
-        POLLY's primary competitive differentiator. A single iframe snippet deploys POLLY as a native tab inside any existing web-based platform — fully authenticated via SSO and connected to existing fleet data. No workflow disruption. No competitor offers this.
-      </p>
+      <h3 class="panel-title">Embedded anywhere. <i>Disrupts nothing.</i></h3>
+      <p class="panel-body">For carriers with existing systems they cannot move away from, POLLY deploys as a native tab inside any web-based platform. One iframe snippet from your IT team. Fully authenticated via SSO. Zero workflow disruption.</p>
     </div>
     <div style="display:flex;align-items:center;justify-content:center">
       <div class="ui-card" style="font-family:var(--font-body)">
-        <div class="ui-card-head">Integration Options</div>
+        <div class="ui-card-head">Deployment Options</div>
         <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
           <div style="background:var(--ink4);border:1px solid var(--border);border-radius:5px;padding:11px;font-size:12px;color:var(--muted)">
             <div style="font-family:var(--font-mono);font-size:8.5px;color:var(--blue-hi);margin-bottom:4px;letter-spacing:.08em">STANDALONE PLATFORM</div>
-            Complete replacement. Full onboarding support. Dedicated account manager.
+            Complete replacement. Full onboarding. Dedicated account manager.
           </div>
           <div style="background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.22);border-radius:5px;padding:11px;font-size:12px;color:var(--muted)">
-            <div style="font-family:var(--font-mono);font-size:8.5px;color:var(--amber-hi);margin-bottom:4px;letter-spacing:.08em">★ KEY DIFFERENTIATOR · EMBEDDED</div>
-            One iframe snippet. POLLY appears as a native tab. Zero workflow disruption.
+            <div style="font-family:var(--font-mono);font-size:8.5px;color:var(--amber-hi);margin-bottom:4px;letter-spacing:.08em">EMBEDDED INTEGRATION</div>
+            One iframe. POLLY as a native tab in your existing software.
           </div>
-          <div style="background:var(--ink4);border:1px solid var(--border);border-radius:5px;padding:9px;font-family:var(--font-mono);font-size:9px;color:var(--faint)">
-            REST API · Webhooks · EDI · CSV/SFTP · SSO/SAML
-          </div>
+          <div style="background:var(--ink4);border:1px solid var(--border);border-radius:5px;padding:9px;font-family:var(--font-mono);font-size:9px;color:var(--faint)">REST API · Webhooks · EDI · CSV/SFTP · SSO/SAML</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Panel 05: AI approach -->
   <div class="story-panel reveal" data-d="60">
     <div>
       <div class="panel-num">05</div>
-      <h3 class="panel-title"><s>AI</s> when the data <em>earns it.</em></h3>
-      <p class="panel-body">
-        POLLY's AI and ML capabilities are a deliberate secondary layer — not a launch promise. We launch with deterministic rules-based optimization that works reliably from day one. Machine learning unlocks per account after real operational data accumulates, not before.
-      </p>
+      <h3 class="panel-title">AI when the data <i>earns it.</i></h3>
+      <p class="panel-body">POLLY launches with deterministic rules-based optimization that works reliably from day one. Machine learning unlocks per account only after real operational data accumulates — because AI that fails in production destroys trust faster than anything else.</p>
     </div>
     <div style="display:flex;align-items:center;justify-content:center">
       <div class="ui-card">
@@ -1178,17 +507,13 @@ footer {
 
 </section>
 
-<!-- ── APP PREVIEW ────────────────────────────────────────────────────────── -->
+<!-- ── APP PREVIEW ── -->
 <section id="platform">
   <div class="platform-head">
     <div class="eyebrow reveal" style="justify-content:center">The Interface</div>
     <h2 class="section-title reveal" data-d="60" style="margin-bottom:10px">Designed for <em>dispatchers.</em></h2>
-    <p class="reveal" style="font-size:15px;color:var(--muted);max-width:400px;margin:0 auto;line-height:1.75" data-d="100">
-      Clean, fast, and built for the realities of a busy dispatch floor.
-    </p>
+    <p class="reveal" style="font-size:15px;color:var(--muted);max-width:420px;margin:0 auto;line-height:1.75" data-d="100">Every screen built for the realities of a busy dispatch floor. Fast, clean, and always showing what matters.</p>
   </div>
-
-  <!-- Fake browser window showing the POLLY app -->
   <div class="app-frame reveal" data-d="80">
     <div class="app-chrome">
       <div class="chrome-dot" style="background:#FF5F57"></div>
@@ -1197,7 +522,6 @@ footer {
       <div class="chrome-url">app.pollylogistics.com</div>
     </div>
     <div class="app-body">
-      <!-- Sidebar navigation -->
       <div class="app-sidebar">
         <div class="app-logo-area">
           <div class="app-logo-text">POLLY</div>
@@ -1206,30 +530,28 @@ footer {
         <div class="app-nav-item active">⊞&nbsp;&nbsp;Dashboard</div>
         <div class="app-nav-item">◉&nbsp;&nbsp;Live Fleet</div>
         <div class="app-nav-item">⊙&nbsp;&nbsp;Fleet Health</div>
+        <div class="app-nav-item">◻&nbsp;&nbsp;Contracts</div>
         <div class="app-nav-item">◎&nbsp;&nbsp;Customers</div>
+        <div class="app-nav-item">◷&nbsp;&nbsp;Scheduler</div>
         <div class="app-nav-item">≡&nbsp;&nbsp;Orders</div>
         <div class="app-nav-item">⊕&nbsp;&nbsp;Route Optimization</div>
         <div class="app-nav-item">▤&nbsp;&nbsp;Inventory</div>
-        <div class="app-nav-item">◈&nbsp;&nbsp;Billing</div>
+        <div class="app-nav-item">◈&nbsp;&nbsp;Billing &amp; Invoicing</div>
+        <div class="app-nav-item">◇&nbsp;&nbsp;Pricing &amp; Quoting</div>
         <div class="app-nav-item">▦&nbsp;&nbsp;Reports</div>
+        <div class="app-nav-item">⊗&nbsp;&nbsp;Settings</div>
       </div>
-      <!-- Main content area -->
       <div class="app-main">
         <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div>
-            <div class="app-page-title">Dashboard</div>
-            <div class="app-page-sub">Monday, May 11, 2026 · Bailey's Inc</div>
-          </div>
+          <div><div class="app-page-title">Dashboard</div><div class="app-page-sub">Monday, May 11, 2026 · Bailey's Inc</div></div>
           <span class="pill pill-g">System Nominal</span>
         </div>
-        <!-- KPI cards -->
         <div class="app-kpis">
           <div class="app-kpi"><div class="app-kpi-val" style="color:var(--blue-hi)">7</div><div class="app-kpi-lbl">Active Trucks</div></div>
           <div class="app-kpi"><div class="app-kpi-val">23</div><div class="app-kpi-lbl">Open Orders</div></div>
           <div class="app-kpi"><div class="app-kpi-val" style="color:var(--amber-hi)">3</div><div class="app-kpi-lbl">Exceptions</div></div>
           <div class="app-kpi"><div class="app-kpi-val" style="color:var(--green-hi)">$14.2k</div><div class="app-kpi-lbl">Today's Revenue</div></div>
         </div>
-        <!-- Orders table -->
         <div>
           <div class="app-table-head"><span>Customer</span><span>Product</span><span>Status</span><span>Driver</span></div>
           <div class="app-table-row"><span>Fort Valley Farm Supply</span><span>DEF · 3,000 gal</span><span><span class="pill pill-g">Delivered</span></span><span style="font-family:var(--font-mono);font-size:9px;color:var(--faint)">Martinez</span></div>
@@ -1242,7 +564,7 @@ footer {
   </div>
 </section>
 
-<!-- ── FEATURES GRID ──────────────────────────────────────────────────────── -->
+<!-- ── FEATURES GRID ── -->
 <section id="features">
   <div class="features-inner">
     <div class="features-header">
@@ -1250,132 +572,117 @@ footer {
         <div class="eyebrow reveal">The Platform</div>
         <h2 class="section-title reveal" data-d="60">Every tool you need.<br><em>Nothing you don't.</em></h2>
       </div>
-      <p class="features-intro reveal" data-d="100">
-        Built from the ground up for carrier operations — not adapted from generic freight software. Every feature reflects how dispatch floors actually work.
-      </p>
+      <p class="features-intro reveal" data-d="100">Built from the ground up for carrier operations — not adapted from generic freight software. Every feature reflects how dispatch floors actually work.</p>
     </div>
     <div class="features-grid">
-      <div class="feature-card reveal" data-d="0"><span class="feature-num">01</span><span class="feature-icon">🗺️</span><div class="feature-name">Route Optimization</div><div class="feature-desc">Multi-constraint VRP solving via OR-Tools and HERE Truck Routing. HOS windows, bridge weight, hazmat roads, offload rates, terminal availability. Maximum deliveries, minimum miles.</div></div>
-      <div class="feature-card reveal" data-d="60"><span class="feature-num">02</span><span class="feature-icon">📡</span><div class="feature-name">Live Fleet Tracking</div><div class="feature-desc">Real-time GPS via Samsara and Motive API connectors. Exception flags, driver status, and geofence alerts — all on one live map updated every 30 seconds.</div></div>
+      <div class="feature-card reveal" data-d="0"><span class="feature-num">01</span><span class="feature-icon">🗺️</span><div class="feature-name">Route Optimization</div><div class="feature-desc">Multi-constraint VRP solving via OR-Tools and HERE Truck Routing. HOS windows, bridge weight limits, hazmat roads, offload rates, and terminal availability. Maximum deliveries, minimum miles.</div></div>
+      <div class="feature-card reveal" data-d="60"><span class="feature-num">02</span><span class="feature-icon">📡</span><div class="feature-name">Live Fleet Tracking</div><div class="feature-desc">Real-time GPS via Samsara and Motive API connectors. Driver status, HOS remaining, exception alerts, and geofence events — all on one live map updated continuously.</div></div>
       <div class="feature-card reveal" data-d="120"><span class="feature-num">03</span><span class="feature-icon">⛽</span><div class="feature-name">Tank Monitoring</div><div class="feature-desc">Live customer site levels via radar and pressure probe sensors. Runout predictions and automated delivery suggestions. Managed as a service — one contract, one contact.</div></div>
-      <div class="feature-card reveal" data-d="0"><span class="feature-num">04</span><span class="feature-icon">📋</span><div class="feature-name">Order Management</div><div class="feature-desc">Create, prioritize, and track deliveries from order through proof of delivery. Emergency orders surface instantly. Add to route or dispatch direct — one click.</div></div>
-      <div class="feature-card reveal" data-d="60"><span class="feature-num">05</span><span class="feature-icon">🔧</span><div class="feature-name">Fleet Health</div><div class="feature-desc">Maintenance schedules, fault codes, driver status, and inspection records. Predictive alerts before a breakdown disrupts a delivery run.</div></div>
-      <div class="feature-card reveal" data-d="120"><span class="feature-num">06</span><span class="feature-icon">💰</span><div class="feature-name">Billing &amp; Invoicing</div><div class="feature-desc">Auto-generated invoices on delivery completion. Stripe payment links. Live AR dashboard. Per-customer pricing rules, volume tiers, and surcharge calculators.</div></div>
+      <div class="feature-card reveal" data-d="0"><span class="feature-num">04</span><span class="feature-icon">📋</span><div class="feature-name">Order Management</div><div class="feature-desc">Create, prioritize, and track deliveries from order through proof of delivery. Auto-generated order and PO numbers. Add to route or dispatch direct with a single click.</div></div>
+      <div class="feature-card reveal" data-d="60"><span class="feature-num">05</span><span class="feature-icon">🔧</span><div class="feature-name">Fleet Health</div><div class="feature-desc">Maintenance schedules, fault codes, driver status, and inspection records. Predictive alerts designed to surface issues before they disrupt a delivery run.</div></div>
+      <div class="feature-card reveal" data-d="120"><span class="feature-num">06</span><span class="feature-icon">💰</span><div class="feature-name">Billing &amp; Invoicing</div><div class="feature-desc">Auto-generated invoices on delivery completion. Stripe-powered payment links. Live accounts receivable dashboard. Per-customer pricing rules and fuel surcharge calculators built in.</div></div>
+      <div class="feature-card reveal" data-d="0"><span class="feature-num">07</span><span class="feature-icon">📆</span><div class="feature-name">Scheduler</div><div class="feature-desc">Build recurring delivery schedules that auto-create orders for a rolling four weeks. Set frequency, product, carrier, and delivery type — orders populate automatically.</div></div>
+      <div class="feature-card reveal" data-d="60"><span class="feature-num">08</span><span class="feature-icon">📄</span><div class="feature-name">Contracts</div><div class="feature-desc">Manage sell contracts for customers, buy product contracts for suppliers, and buy freight contracts for carriers — all linked to orders and invoicing automatically.</div></div>
+      <div class="feature-card reveal" data-d="120"><span class="feature-num">09</span><span class="feature-icon">◇</span><div class="feature-name">Pricing &amp; Quoting</div><div class="feature-desc">Per-customer pricing rules, volume tiers, and fuel surcharge calculators. Build and send formal quotes as PDFs directly from the platform.</div></div>
     </div>
   </div>
 </section>
 
-<!-- ── DEFENSIBILITY ──────────────────────────────────────────────────────── -->
-<section id="moat">
-  <div class="moat-inner">
-    <div class="eyebrow reveal">Why Carriers Stay</div>
-    <h2 class="section-title reveal" data-d="60">Built to be <em>hard to leave.</em></h2>
-    <p class="reveal" style="font-size:15px;color:var(--muted);max-width:480px;margin-top:14px;line-height:1.8" data-d="100">
-      Defensibility isn't built on launch day. It compounds through data, operational depth, and switching costs over time.
+<!-- ── HOW IT ALL CONNECTS (replaces moat) ── -->
+<section id="connects">
+  <div class="connects-inner">
+    <div class="eyebrow reveal">How It All Connects</div>
+    <h2 class="section-title reveal" data-d="60">One platform.<br><em>Everything in sync.</em></h2>
+    <p class="reveal" style="font-size:15px;color:var(--muted);max-width:500px;margin-top:14px;line-height:1.8" data-d="100">
+      Every module in POLLY shares the same data. An order created in Orders populates in Route Optimization. A customer added in Customers flows through to Scheduler and Billing. Changes in one place reflect everywhere.
     </p>
-    <div class="moat-grid">
-      <div class="moat-card reveal" data-d="0"><div class="moat-icon">📈</div><div class="moat-title">Data Flywheel</div><div class="moat-body">Every route optimized generates training data. More customers means better models, which means a more accurate and valuable platform over time.</div></div>
-      <div class="moat-card reveal" data-d="60"><div class="moat-icon">🔒</div><div class="moat-title">High Switching Costs</div><div class="moat-body">Once routes, inventory, billing, and customer relationships run through POLLY, switching means retraining staff, rebuilding integrations, and losing operational history.</div></div>
-      <div class="moat-card reveal" data-d="120"><div class="moat-icon">🔩</div><div class="moat-title">Hardware in the Ground</div><div class="moat-body">Sensors installed at customer sites create physical lock-in. Displacing them requires field operations and tens of thousands in replacement cost — not a software migration.</div></div>
-      <div class="moat-card reveal" data-d="0"><div class="moat-icon">🎯</div><div class="moat-title">Vertical Specificity</div><div class="moat-body">Built around the specific dynamics of liquid bulk distribution. Domain knowledge that a horizontal competitor cannot replicate from scratch.</div></div>
-      <div class="moat-card reveal" data-d="60"><div class="moat-icon">🔗</div><div class="moat-title">Multi-Party Lock-In</div><div class="moat-body">When POLLY connects carrier, supplier, and customer sites, removing it breaks the visibility chain for all three simultaneously.</div></div>
-      <div class="moat-card reveal" data-d="120"><div class="moat-icon">🌐</div><div class="moat-title">Network Effects</div><div class="moat-body">Carriers in the same region share terminals and customer types. Word of mouth in a tight-knit vertical moves faster than any advertising campaign.</div></div>
+    <div class="connects-grid">
+      <div class="connect-card reveal" data-d="0"><div class="connect-icon">🗺</div><div class="connect-title">Orders → Routes</div><div class="connect-body">Orders created with "Add to Route Builder" automatically appear as stops in Route Optimization, mapped to the customer's coordinates. Route status syncs back to the order.</div></div>
+      <div class="connect-card reveal" data-d="60"><div class="connect-icon">⛽</div><div class="connect-title">Tanks → Deliveries</div><div class="connect-body">Live tank levels from customer sites flow directly into inventory intelligence and route planning. POLLY surfaces runout risks before a customer has to call.</div></div>
+      <div class="connect-card reveal" data-d="120"><div class="connect-icon">📆</div><div class="connect-title">Schedules → Orders</div><div class="connect-body">Recurring schedules in the Scheduler automatically generate orders on the defined cadence, pre-populated with customer, product, carrier, and delivery type.</div></div>
+      <div class="connect-card reveal" data-d="0"><div class="connect-icon">📄</div><div class="connect-title">Contracts → Pricing</div><div class="connect-body">Sell contracts set at the customer level flow through to invoicing automatically. Buy contracts for carriers and suppliers inform margin calculations without manual entry.</div></div>
+      <div class="connect-card reveal" data-d="60"><div class="connect-icon">💰</div><div class="connect-title">Delivery → Invoice</div><div class="connect-body">When a delivery is confirmed, POLLY generates and sends the invoice automatically using the customer's pricing rules, then tracks payment through the AR dashboard.</div></div>
+      <div class="connect-card reveal" data-d="120"><div class="connect-icon">📡</div><div class="connect-title">Fleet → Dispatch</div><div class="connect-body">Live HOS data from ELD connectors flows into route optimization. POLLY only assigns stops within a driver's available hours, preventing violations before they happen.</div></div>
     </div>
   </div>
 </section>
 
-<!-- ── DEPLOYMENT OPTIONS ─────────────────────────────────────────────────── -->
+<!-- ── DEPLOYMENT OPTIONS ── -->
 <section id="deploy">
   <div class="deploy-inner">
     <div class="eyebrow reveal">Deployment Options</div>
     <h2 class="section-title reveal" data-d="60">Works the way <em>you work.</em></h2>
+    <p class="reveal" style="font-size:15px;color:var(--muted);max-width:480px;margin-top:14px;line-height:1.8" data-d="100">
+      POLLY is designed to meet carriers where they are — whether that means replacing everything or fitting into what already exists.
+    </p>
     <div class="deploy-grid">
-      <!-- Option 1: Standalone -->
       <div class="deploy-card reveal" data-d="0">
         <span class="deploy-badge badge-blue">Standalone Platform</span>
-        <div class="deploy-title">Complete System Replacement</div>
-        <div class="deploy-body">For carriers ready to modernize from the ground up. POLLY replaces all existing tools, with Polly Logistics staying involved as an active operational partner.</div>
+        <div class="deploy-title">Complete Operations System</div>
+        <div class="deploy-body">For carriers ready to bring all operations into one place. POLLY replaces disconnected tools with a unified system, and Polly Logistics stays involved as an active operational partner throughout.</div>
         <div class="deploy-list">
           <div class="deploy-item">Full data migration from legacy systems</div>
-          <div class="deploy-item">Dedicated account manager (20:1 ratio)</div>
-          <div class="deploy-item">Structured staff training &amp; onboarding</div>
-          <div class="deploy-item">Telemetry hardware sourcing &amp; installation</div>
+          <div class="deploy-item">Dedicated account manager at 20:1 ratio</div>
+          <div class="deploy-item">Structured staff training and onboarding</div>
+          <div class="deploy-item">Telemetry hardware sourcing and installation</div>
           <div class="deploy-item">Every POLLY module included</div>
         </div>
       </div>
-      <!-- Option 2: Embedded (key differentiator) -->
       <div class="deploy-card highlight reveal" data-d="100">
-        <span class="deploy-badge badge-amber">★ Key Differentiator</span>
-        <div class="deploy-title">Embedded Integration</div>
-        <div class="deploy-body">For carriers with legacy systems they can't move away from. POLLY appears as a native tab inside existing software. One iframe snippet. Zero workflow disruption.</div>
+        <span class="deploy-badge badge-amber">Embedded Integration</span>
+        <div class="deploy-title">Inside Your Existing Software</div>
+        <div class="deploy-body">For carriers with existing systems they rely on. POLLY appears as a native tab inside any web-based platform — fully authenticated via SSO and connected to your fleet data from day one.</div>
         <div class="deploy-list">
-          <div class="deploy-item">Single iframe — one conversation with IT</div>
-          <div class="deploy-item">Loads inside any web-based platform via SSO</div>
-          <div class="deploy-item">JavaScript bridge reads parent system context</div>
-          <div class="deploy-item">Per-module pricing — deploy only what you need</div>
+          <div class="deploy-item">Single iframe — one brief conversation with IT</div>
+          <div class="deploy-item">Loads inside any web-based platform</div>
           <div class="deploy-item">No data migration required to get started</div>
+          <div class="deploy-item">Per-module pricing — deploy only what you need</div>
+          <div class="deploy-item">Zero disruption to existing workflows</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ── EXPANSION VISION ───────────────────────────────────────────────────── -->
+<!-- ── EXPANSION VISION ── -->
 <section id="expansion">
   <div class="expansion-inner">
     <div class="eyebrow reveal">The Bigger Picture</div>
     <h2 class="section-title reveal" data-d="60">Starting focused.<br><em>Thinking bigger.</em></h2>
     <p class="reveal" style="font-size:15px;color:var(--muted);max-width:500px;margin-top:14px;line-height:1.8" data-d="100">
-      We enter through fuel and lube distribution — a vertical we know deeply. The operational intelligence we're building has no ceiling.
+      We enter through fuel and lube distribution — a vertical we know deeply. The operational intelligence we are building has no ceiling.
     </p>
     <div class="expansion-track reveal" data-d="140">
-      <div class="exp-cell">
-        <div class="exp-phase">Phase 1 · Now</div>
-        <div class="exp-name">Fuel &amp; Lube</div>
-        <div class="exp-desc">DEF, diesel, lubricants, propane. The vertical where POLLY is purpose-built to win.</div>
-      </div>
+      <div class="exp-cell"><div class="exp-phase">Phase 1 · Now</div><div class="exp-name">Fuel &amp; Lube</div><div class="exp-desc">DEF, diesel, lubricants, propane. The vertical where POLLY is purpose-built to operate.</div></div>
       <div class="exp-arrow">→</div>
-      <div class="exp-cell">
-        <div class="exp-phase">Phase 2 · Year 2+</div>
-        <div class="exp-name">Broader Carriers</div>
-        <div class="exp-desc">General trucking, LTL, and specialized freight. Same intelligence, broader application.</div>
-      </div>
+      <div class="exp-cell"><div class="exp-phase">Phase 2 · Year 2+</div><div class="exp-name">Broader Carriers</div><div class="exp-desc">General trucking, LTL, and specialized freight. Same intelligence, broader application.</div></div>
       <div class="exp-arrow">→</div>
-      <div class="exp-cell">
-        <div class="exp-phase">Phase 3 · Long-Term</div>
-        <div class="exp-name">Warehousing</div>
-        <div class="exp-desc">Inventory and routing intelligence extended to distribution centers and fulfillment.</div>
-      </div>
+      <div class="exp-cell"><div class="exp-phase">Phase 3 · Long-Term</div><div class="exp-name">Warehousing</div><div class="exp-desc">Inventory and routing intelligence extended to distribution centers and fulfillment.</div></div>
       <div class="exp-arrow">→</div>
-      <div class="exp-cell">
-        <div class="exp-phase">Vision · Beyond</div>
-        <div class="exp-name">Air &amp; Ocean</div>
-        <div class="exp-desc">The operational layer that eventually connects every mode of transport.</div>
-      </div>
+      <div class="exp-cell"><div class="exp-phase">Vision · Beyond</div><div class="exp-name">Air &amp; Ocean</div><div class="exp-desc">The operational layer that eventually connects every mode of transport.</div></div>
     </div>
   </div>
 </section>
 
-<!-- ── CTA BAND ───────────────────────────────────────────────────────────── -->
+<!-- ── CTA ── -->
 <section id="cta">
   <div class="cta-glow"></div>
-  <h2 class="cta-title reveal">Ready to run a<br>tighter <em>operation?</em></h2>
+  <h2 class="cta-title reveal">Ready to see<br>POLLY in <em>action?</em></h2>
   <p class="cta-sub reveal" data-d="60">
-    Get a 30-minute live demo tailored to your fleet and delivery area.
-    Beta partners receive software and hardware at no cost during testing.
+    Request a 30-minute live demo tailored to your fleet and delivery area. We will show you what POLLY looks like running on routes like yours.
   </p>
   <div class="cta-actions reveal" data-d="120">
-    <a href="mailto:hello@pollylogistics.com" class="btn btn-primary" style="padding:13px 32px">Request Early Access</a>
+    <a href="mailto:hello@pollylogistics.com" class="btn btn-primary" style="padding:13px 32px">Request a Demo</a>
     <a href="mailto:hello@pollylogistics.com" class="btn btn-ghost" style="padding:13px 32px">hello@pollylogistics.com</a>
   </div>
 </section>
 
-<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<!-- ── FOOTER ── -->
 <footer>
   <div class="footer-inner">
     <div>
       <div class="footer-brand">POLL<span>Y</span></div>
-      <p class="footer-tagline">Precision. Optimization. Logistics. Live Data. Your Fleet. — Built to expand across the entire carrier industry.</p>
+      <p class="footer-tagline">Precision. Optimization. Logistics. Live Data. Your Fleet. — Built for fuel and lube carriers, expanding across the industry.</p>
     </div>
     <div>
       <div class="footer-col-title">Platform</div>
@@ -1391,7 +698,7 @@ footer {
       <ul class="footer-links">
         <li><a href="#who">About</a></li>
         <li><a href="#">Careers</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="mailto:hello@pollylogistics.com">Contact</a></li>
       </ul>
     </div>
     <div>
@@ -1410,81 +717,55 @@ footer {
 </footer>
 
 <script>
-// ── CUSTOM CURSOR ─────────────────────────────────────────────────────────
-// Dot follows mouse instantly; ring lags behind for a trailing effect
+// ── CUSTOM CURSOR ────────────────────────────────────────────────────────
 const dot  = document.getElementById('cur-dot');
 const ring = document.getElementById('cur-ring');
-let mx = 0, my = 0, rx = 0, ry = 0;
-
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  dot.style.left = mx + 'px';
-  dot.style.top  = my + 'px';
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  dot.style.left=mx+'px';dot.style.top=my+'px';
 });
-
-// Ring smoothly interpolates toward mouse position each frame
-(function animateRing() {
-  rx += (mx - rx) * 0.1;
-  ry += (my - ry) * 0.1;
-  ring.style.left = rx + 'px';
-  ring.style.top  = ry + 'px';
+(function animateRing(){
+  rx+=(mx-rx)*.1;ry+=(my-ry)*.1;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
   requestAnimationFrame(animateRing);
 })();
-
-// Cursor grows when hovering interactive elements
-document.querySelectorAll('a, button').forEach(el => {
-  el.addEventListener('mouseenter', () => {
-    ring.style.width = '44px'; ring.style.height = '44px';
-    ring.style.borderColor = 'rgba(96,165,250,.5)';
-  });
-  el.addEventListener('mouseleave', () => {
-    ring.style.width = '26px'; ring.style.height = '26px';
-    ring.style.borderColor = 'rgba(252,211,77,.3)';
-  });
+document.querySelectorAll('a,button').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='44px';ring.style.height='44px';ring.style.borderColor='rgba(96,165,250,.5)'});
+  el.addEventListener('mouseleave',()=>{ring.style.width='26px';ring.style.height='26px';ring.style.borderColor='rgba(252,211,77,.3)'});
 });
 
-// ── NAV SCROLL STATE ──────────────────────────────────────────────────────
-// Adds 'scrolled' class when user scrolls down — triggers dark background
-const nav = document.getElementById('main-nav');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 40);
-}, { passive: true });
+// ── NAV SCROLL ───────────────────────────────────────────────────────────
+const nav=document.getElementById('main-nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',window.scrollY>40),{passive:true});
 
 // ── HERO GRID PARALLAX ────────────────────────────────────────────────────
-// Grid moves upward as you scroll, creating depth illusion
-const heroGrid = document.getElementById('hero-grid');
-window.addEventListener('scroll', () => {
-  const s = window.scrollY;
-  if (s < window.innerHeight * 1.4) {
-    heroGrid.style.transform =
-      `perspective(800px) rotateX(20deg) scale(1.35) translateY(${s * 0.2}px)`;
+const heroGrid=document.getElementById('hero-grid');
+window.addEventListener('scroll',()=>{
+  const s=window.scrollY;
+  if(s<window.innerHeight*1.4){
+    heroGrid.style.transform=`perspective(800px) rotateX(20deg) scale(1.35) translateY(${s*.2}px)`;
   }
-}, { passive: true });
+},{passive:true});
 
 // ── SCROLL REVEAL ─────────────────────────────────────────────────────────
-// Elements with class 'reveal' animate in when they enter the viewport
-const revealObserver = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const el    = entry.target;
-      const delay = parseInt(el.dataset.d || 0);
-      setTimeout(() => el.classList.add('visible'), delay);
-      revealObserver.unobserve(el); // only animate once
+const ro=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const el=entry.target;
+      const delay=parseInt(el.dataset.d||0);
+      setTimeout(()=>el.classList.add('visible'),delay);
+      ro.unobserve(el);
     }
   });
-}, { threshold: 0.1 });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
 
-document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
-
-// ── SMOOTH SCROLL FOR ANCHOR LINKS ────────────────────────────────────────
-// Makes nav tab clicks scroll smoothly to the target section
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) {
-      e.preventDefault();
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+// ── SMOOTH SCROLL ─────────────────────────────────────────────────────────
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const target=document.querySelector(a.getAttribute('href'));
+    if(target){e.preventDefault();target.scrollIntoView({behavior:'smooth',block:'start'})}
   });
 });
 </script>
